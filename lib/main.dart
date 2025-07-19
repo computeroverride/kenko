@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kenko/home.dart';
 import 'package:kenko/login.dart';
+import 'package:kenko/mappage.dart';
 import 'package:kenko/profile.dart';
-import 'signup.dart';
+import 'package:kenko/signup.dart';
 
 void main() {
   runApp(
@@ -13,6 +14,7 @@ void main() {
         '/login': (context) => Login(),
         '/home': (context) => Home(),
         '/profile': (context) => Profile(),
+        '/map': (context) => MapPage(),
       },
     ),
   );
