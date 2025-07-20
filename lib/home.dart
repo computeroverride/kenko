@@ -39,7 +39,7 @@ class _HomeState extends State<Home> {
             label: 'Dashboard',
           ),
           BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: 'Add'),
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Maaaap'),
           BottomNavigationBarItem(
             icon: Icon(Icons.self_improvement),
             label: 'Mental',
