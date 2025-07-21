@@ -12,7 +12,7 @@ void main() {
     MaterialApp(
       home: (Login()),
       routes: {
-        '/signup': (context) => Signup() ,
+        '/signup': (context) => Signup(),
         '/login': (context) => Login(),
         '/home': (context) => Home(),
         '/profile': (context) => Profile(),
