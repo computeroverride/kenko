@@ -13,7 +13,7 @@ class LogAdd extends StatelessWidget {
         children: [
           ListTile(
             leading:  Icon(Icons.rice_bowl),
-            title: Text("Food and Water"),
+            title: Text("Food and Water Log"),
             onTap: () {
               Navigator.pop(context);
               Navigator.pushReplacementNamed(context, '/food&water');
