@@ -25,7 +25,7 @@ class _LoginState extends State<Login> {
             color: Colors.blueGrey,
             child: const Center(
               child: Text(
-                "KEN",
+                "KENk",
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
