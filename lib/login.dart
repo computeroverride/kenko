@@ -18,18 +18,23 @@ class _LoginState extends State<Login> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        elevation: 0,
         backgroundColor: const Color.fromRGBO(192, 204, 218, 1),
         centerTitle: true,
-        title: Text("KENKO",
-        style: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 1.2,
-          color: const Color.fromRGBO(66, 76, 90, 1),
-        )),
+        title: Text(
+          "KENKO",
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.2,
+            color: const Color.fromRGBO(66, 76, 90, 1),
+          ),
+        ),
       ),
-      body: SafeArea( // Ensures content stays within visible screen area
-        child: SingleChildScrollView( // Prevents overflow by allowing scroll
+      body: SafeArea(
+        // Ensures content stays within visible screen area
+        child: SingleChildScrollView(
+          // Prevents overflow by allowing scroll
           child: Column(
             children: [
               const SizedBox(height: 50),
@@ -111,4 +116,3 @@ class _LoginState extends State<Login> {
     );
   }
 }
-
