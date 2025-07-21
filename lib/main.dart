@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kenko/activity.dart';
+import 'package:kenko/foodwater.dart';
 import 'package:kenko/home.dart';
 import 'package:kenko/login.dart';
 import 'package:kenko/mappage.dart';
@@ -14,7 +16,9 @@ void main() {
         '/login': (context) => Login(),
         '/home': (context) => Home(),
         '/profile': (context) => Profile(),
-        '/map': (context) => MapPage(),
+        '/food&water': (context) => FoodWaterLog(),
+        '/activity': (context) => ActivityLog(),
+        '/map': (context) => FreeMapScreen(),
       },
     ),
   );
