@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:kenko/logadd.dart';
 
 class ActivityLog extends StatefulWidget {
+  const ActivityLog({super.key});
+
   @override
   State<ActivityLog> createState() => _ActivityLogState();
 }

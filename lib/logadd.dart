@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 
 class LogAdd extends StatelessWidget {
+  const LogAdd({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(

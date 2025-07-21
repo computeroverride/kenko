@@ -5,6 +5,8 @@ import 'package:kenko/logadd.dart';
 
 
 class FoodWaterLog extends StatefulWidget {
+  const FoodWaterLog({super.key});
+
   @override
   State<FoodWaterLog> createState() => _FoodWaterLogState();
 }
