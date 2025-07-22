@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kenko/logadd.dart';
 
-
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -18,7 +17,6 @@ class _HomeState extends State<Home> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,19 +24,22 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(192, 204, 218, 1),
         centerTitle: true,
-        title: Text("HOME",
-        style: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 1.2,
-          color: const Color.fromRGBO(66, 76, 90, 1),
-        )),
+        title: Text(
+          "HOME",
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.2,
+            color: const Color.fromRGBO(66, 76, 90, 1),
+          ),
+        ),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.account_circle),
             onPressed: () {
               Navigator.pushReplacementNamed(context, '/profile');
-            })
+            },
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -51,26 +52,32 @@ class _HomeState extends State<Home> {
         onTap: (index) {
           if (index == 2) {
             showModalBottomSheet(
-              context: context, 
+              context: context,
               backgroundColor: Colors.white,
-              builder: (context) => LogAdd());
-          }
-          else if (index == 3){
+              builder: (context) => LogAdd(),
+            );
+          } else if (index == 3) {
             Navigator.pushReplacementNamed(context, '/map');
-          }
-          else {
+          } else if (index == 4) {
+            Navigator.pushReplacementNamed(context, '/mental');
+          } else {
             _onItemTapped(index);
           }
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard),
+            label: 'Dashboard',
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: 'Add'),
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'), 
-          BottomNavigationBarItem(icon: Icon(Icons.self_improvement), label: 'Mental'),
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.self_improvement),
+            label: 'Mental',
+          ),
         ],
       ),
     );
   }
 }
-

@@ -6,6 +6,8 @@ import 'package:kenko/login.dart';
 import 'package:kenko/mappage.dart';
 import 'package:kenko/profile.dart';
 import 'package:kenko/signup.dart';
+// ignore: unused_import
+import 'package:kenko/mental.dart';
 
 void main() {
   runApp(
@@ -20,6 +22,8 @@ void main() {
         '/food&water': (context) => FoodWaterLog(),
         '/activity': (context) => ActivityLog(),
         '/map': (context) => FreeMapScreen(),
+        '/mental': (context) => MentalPage(),
+
       },
     ),
   );
