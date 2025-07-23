@@ -1,8 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:kenko/logadd.dart';
 import 'dart:math';
 import 'package:confetti/confetti.dart';
+import 'package:kenko/mentalcalendar.dart';
 
 class Quote {
   final String content;
@@ -21,11 +21,20 @@ class _MentalPageState extends State<MentalPage> {
   int _selectedIndex = 4; // This page is at index 4 (Mental)
 
   final List<Quote> _quotes = [
-    Quote(content: "You won't always be motivated. That's why you need to be disciplined."),
+    Quote(
+      content:
+          "You won't always be motivated. That's why you need to be disciplined.",
+    ),
     Quote(content: "It's not about having time. It's about making time."),
     Quote(content: "Results happen over time, not overnight. Stay consistent."),
-    Quote(content: "One workout won't change your body. But one workout closer gets you there."),
-    Quote(content: "If it's important to you, you'll find a way. If not, you'll find an excuse."),
+    Quote(
+      content:
+          "One workout won't change your body. But one workout closer gets you there.",
+    ),
+    Quote(
+      content:
+          "If it's important to you, you'll find a way. If not, you'll find an excuse.",
+    ),
     Quote(content: "Strong isn't just physical—it's mental, too."),
     Quote(content: "Push your limits. That's where growth lives."),
     Quote(content: "You don't find willpower, you create it."),
@@ -36,7 +45,10 @@ class _MentalPageState extends State<MentalPage> {
     Quote(content: "Don't compare your Day 1 to someone else's Day 100."),
     Quote(content: "The only bad workout is the one you didn't do."),
     Quote(content: "Be stronger than your excuses."),
-    Quote(content: "Fitness is 100% mental—your body won't go where your mind doesn't push it."),
+    Quote(
+      content:
+          "Fitness is 100% mental—your body won't go where your mind doesn't push it.",
+    ),
     Quote(content: "Your mind gives up before your body does. Keep going."),
     Quote(content: "Doubt kills more dreams than failure ever will."),
     Quote(content: "Champions train, losers complain."),
@@ -46,21 +58,36 @@ class _MentalPageState extends State<MentalPage> {
     Quote(content: "Your goal is on the other side of effort."),
     Quote(content: "Visualize the win. Then go earn it."),
     Quote(content: "Every rep is a vote for the person you want to become."),
-    Quote(content: "Don't wait for inspiration. Be the reason someone else starts."),
+    Quote(
+      content: "Don't wait for inspiration. Be the reason someone else starts.",
+    ),
     Quote(content: "You don't have to be extreme. Just consistent."),
     Quote(content: "Train hard. Rest hard. Repeat."),
     Quote(content: "Grind in silence. Let your results make the noise."),
-    Quote(content: "Your body can stand almost anything. It's your mind you have to convince."),
-    Quote(content: "Success isn't always about greatness. It's about consistency."),
+    Quote(
+      content:
+          "Your body can stand almost anything. It's your mind you have to convince.",
+    ),
+    Quote(
+      content: "Success isn't always about greatness. It's about consistency.",
+    ),
     Quote(content: "The only bad workout is the one that didn't happen"),
     Quote(content: "Train insane or remain the same."),
     Quote(content: "Don't limit your challenges. Challenge your limits."),
-    Quote(content: "Push yourself because no one else is going to do it for you."),
-    Quote(content: "Your body can stand almost anything. It's your mind you have to convince."),
+    Quote(
+      content: "Push yourself because no one else is going to do it for you.",
+    ),
+    Quote(
+      content:
+          "Your body can stand almost anything. It's your mind you have to convince.",
+    ),
     Quote(content: "Hard work beats talent when talent doesn't work hard."),
     Quote(content: "Your only competition is who you were yesterday."),
     Quote(content: "Sweat is just fat crying."),
-    Quote(content: "Fitness isn't about being better than someone else. It's about being better than you used to be."),
+    Quote(
+      content:
+          "Fitness isn't about being better than someone else. It's about being better than you used to be.",
+    ),
   ];
 
   late Quote _currentQuote;
@@ -73,7 +100,9 @@ class _MentalPageState extends State<MentalPage> {
   void initState() {
     super.initState();
     _displayRandomQuote();
-    _confettiController = ConfettiController(duration: const Duration(seconds: 2));
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 2),
+    );
   }
 
   @override
@@ -102,7 +131,7 @@ class _MentalPageState extends State<MentalPage> {
         Navigator.pushReplacementNamed(context, '/map');
         break;
       case 4:
-      // already on Mental
+        // already on Mental
         break;
     }
   }
@@ -157,7 +186,7 @@ class _MentalPageState extends State<MentalPage> {
               radius: 16,
               child: Icon(Icons.person, size: 18, color: Colors.black54),
             ),
-          )
+          ),
         ],
       ),
       body: Stack(
@@ -167,12 +196,18 @@ class _MentalPageState extends State<MentalPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: 8.0,
+                ),
                 child: Row(
                   children: [
                     const Icon(Icons.favorite_border, color: Colors.black87),
                     const SizedBox(width: 8),
-                    Text("$_likeCount/$_maxLikes", style: const TextStyle(fontSize: 16)),
+                    Text(
+                      "$_likeCount/$_maxLikes",
+                      style: const TextStyle(fontSize: 16),
+                    ),
                     const SizedBox(width: 10),
                     Expanded(
                       child: ClipRRect(
@@ -180,7 +215,9 @@ class _MentalPageState extends State<MentalPage> {
                         child: LinearProgressIndicator(
                           value: progress,
                           backgroundColor: const Color(0xFFDBE3EC),
-                          valueColor: const AlwaysStoppedAnimation<Color>(Colors.deepPurple),
+                          valueColor: const AlwaysStoppedAnimation<Color>(
+                            Colors.deepPurple,
+                          ),
                           minHeight: 8,
                         ),
                       ),
@@ -209,22 +246,39 @@ class _MentalPageState extends State<MentalPage> {
                     color: Color(0xFF4A5C6A),
                   ),
                   padding: const EdgeInsets.all(16),
-                  child: const Icon(Icons.favorite, color: Colors.white, size: 28),
+                  child: const Icon(
+                    Icons.favorite,
+                    color: Colors.white,
+                    size: 28,
+                  ),
                 ),
               ),
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () {
-                  // TO BE DONE
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LogMoodPage(),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF8C97A1),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 12,
+                  ),
                 ),
                 child: const Text(
                   'LOG DAILY MOOD',
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],
@@ -251,10 +305,16 @@ class _MentalPageState extends State<MentalPage> {
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard),
+            label: 'Dashboard',
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: 'Add'),
           BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
-          BottomNavigationBarItem(icon: Icon(Icons.self_improvement), label: 'Mental'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.self_improvement),
+            label: 'Mental',
+          ),
         ],
       ),
     );
