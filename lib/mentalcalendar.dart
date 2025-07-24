@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LogMoodPage extends StatefulWidget {
   const LogMoodPage({super.key});
@@ -12,6 +15,12 @@ class _LogMoodPageState extends State<LogMoodPage> {
   Map<DateTime, String> moodLog = {};
   DateTime focusedDay = DateTime.now();
   DateTime? selectedDay;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMoodsFromFirestore();
+  }
 
   Color? getMoodColor(DateTime day) {
     final mood = moodLog[DateTime(day.year, day.month, day.day)];
@@ -28,6 +37,9 @@ class _LogMoodPageState extends State<LogMoodPage> {
   }
 
   void _selectMood(DateTime day) {
+    final formattedDay = DateTime(day.year, day.month, day.day);
+    final dateKey = "${formattedDay.year}-${formattedDay.month}-${formattedDay.day}";
+
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
@@ -37,27 +49,30 @@ class _LogMoodPageState extends State<LogMoodPage> {
           children: [
             IconButton(
               icon: const Icon(Icons.sentiment_very_dissatisfied, color: Colors.blue),
-              onPressed: () {
+              onPressed: () async {
+                await _saveMoodToFirestore(dateKey, 'sad');
                 setState(() {
-                  moodLog[DateTime(day.year, day.month, day.day)] = 'sad';
+                  moodLog[formattedDay] = 'sad';
                 });
                 Navigator.pop(context);
               },
             ),
             IconButton(
               icon: const Icon(Icons.sentiment_neutral, color: Colors.grey),
-              onPressed: () {
+              onPressed: () async {
+                await _saveMoodToFirestore(dateKey, 'neutral');
                 setState(() {
-                  moodLog[DateTime(day.year, day.month, day.day)] = 'neutral';
+                  moodLog[formattedDay] = 'neutral';
                 });
                 Navigator.pop(context);
               },
             ),
             IconButton(
               icon: const Icon(Icons.sentiment_very_satisfied, color: Colors.yellow),
-              onPressed: () {
+              onPressed: () async {
+                await _saveMoodToFirestore(dateKey, 'happy');
                 setState(() {
-                  moodLog[DateTime(day.year, day.month, day.day)] = 'happy';
+                  moodLog[formattedDay] = 'happy';
                 });
                 Navigator.pop(context);
               },
@@ -66,6 +81,28 @@ class _LogMoodPageState extends State<LogMoodPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _saveMoodToFirestore(String dateKey, String mood) async {
+    final moodsCollection = FirebaseFirestore.instance.collection('moods');
+    await moodsCollection.doc(dateKey).set({'mood': mood});
+  }
+
+  Future<void> _loadMoodsFromFirestore() async {
+    final moodsCollection = FirebaseFirestore.instance.collection('moods');
+    final snapshot = await moodsCollection.get();
+
+    setState(() {
+      moodLog.clear();
+      for (var doc in snapshot.docs) {
+        final mood = doc.data()['mood'];
+        final parts = doc.id.split('-');
+        final year = int.parse(parts[0]);
+        final month = int.parse(parts[1]);
+        final day = int.parse(parts[2]);
+        moodLog[DateTime(year, month, day)] = mood;
+      }
+    });
   }
 
   @override
