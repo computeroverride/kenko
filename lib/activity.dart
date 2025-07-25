@@ -1,5 +1,3 @@
-// ill actly do it once the profile is moved to the top right -marjana
-
 import 'package:flutter/material.dart';
 import 'package:kenko/logadd.dart';
 
@@ -34,6 +32,64 @@ class _ActivityLogState extends State<ActivityLog> {
           color: const Color.fromRGBO(66, 76, 90, 1),
         )),
       ),
+
+      body: Column(
+        children: [
+          const SizedBox(height: 50),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: Column(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromRGBO(66, 76, 90, 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(context, '/workout');
+                    }, 
+                    child: const Text("WORKOUT",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
+                        color: Colors.white
+                      )
+                    )),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromRGBO(66, 76, 90, 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(context, '/steps');
+                    }, 
+                    child: const Text("STEPS",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
+                        color: Colors.white
+                      )
+                    )),
+                ),
+              ],
+            )
+            
+          )
+        ],
+      ),
+
       bottomNavigationBar: BottomNavigationBar (
         backgroundColor: Colors.white,
         currentIndex: _selectedIndex,
@@ -43,13 +99,19 @@ class _ActivityLogState extends State<ActivityLog> {
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
           if (index == 2) {
-            showModalBottomSheet(context: context, builder: (context) => LogAdd());
+            showModalBottomSheet(
+              context: context, 
+              backgroundColor: Colors.white,
+              builder: (context) => LogAdd());
           }
           else if (index == 0){
             Navigator.pushReplacementNamed(context,'/home');
           }
           else if (index == 3){
             Navigator.pushReplacementNamed(context, '/map');
+          }
+          else if (index == 4){
+            Navigator.pushReplacementNamed(context, '/mental');
           }
           else {
             _onItemTapped(index);

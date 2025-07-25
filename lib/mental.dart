@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:kenko/logadd.dart';
 import 'dart:math';
@@ -124,6 +125,7 @@ class _MentalPageState extends State<MentalPage> {
       case 2:
         showModalBottomSheet(
           context: context,
+          backgroundColor: Colors.white,
           builder: (context) => const LogAdd(),
         );
         break;

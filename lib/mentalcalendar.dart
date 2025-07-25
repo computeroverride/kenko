@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kenko/logadd.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -16,10 +17,18 @@ class _LogMoodPageState extends State<LogMoodPage> {
   DateTime focusedDay = DateTime.now();
   DateTime? selectedDay;
 
+  int _selectedIndex = 0;
+
   @override
   void initState() {
     super.initState();
     _loadMoodsFromFirestore();
+  }
+
+   void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   Color? getMoodColor(DateTime day) {
@@ -160,6 +169,43 @@ class _LogMoodPageState extends State<LogMoodPage> {
           ),
           const SizedBox(height: 20),
           const Text("Tap any day to log your mood"),
+        ],
+      ),
+
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        currentIndex: _selectedIndex,
+        selectedItemColor: const Color.fromRGBO(66, 76, 90, 1),
+        unselectedItemColor: Colors.grey,
+        showUnselectedLabels: true,
+        type: BottomNavigationBarType.fixed,
+        onTap: (index) {
+          if (index == 2) {
+            showModalBottomSheet(
+              context: context,
+              backgroundColor: Colors.white,
+              builder: (context) => LogAdd(),
+            );
+          } else if (index == 0) {
+            Navigator.pushReplacementNamed(context, '/home');
+          } else if (index == 3) {
+            Navigator.pushReplacementNamed(context, '/map');
+          } else {
+            _onItemTapped(index);
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard),
+            label: 'Dashboard',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: 'Add'),
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.self_improvement),
+            label: 'Mental',
+          ),
         ],
       ),
     );

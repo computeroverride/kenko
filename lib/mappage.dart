@@ -205,6 +205,7 @@ class _FreeMapScreenState extends State<FreeMapScreen> {
           if (index == 2) {
             showModalBottomSheet(
               context: context,
+              backgroundColor: Colors.white,
               builder: (context) => LogAdd(),
             );
           } else if (index == 0) {
