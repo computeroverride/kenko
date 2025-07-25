@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart'; 
 import 'login.dart';
 
 class Signup extends StatefulWidget {
@@ -41,22 +42,52 @@ class _SignupState extends State<Signup> {
     );
   }
 
-  void _signup() {
+  // Firebase Signup Function
+  Future<void> _signup() async {
+    final email = _emailController.text.trim();
     final passwordText = _passwordController.text.trim();
     final confirmPasswordText = _confirmPasswordController.text.trim();
 
-    if (passwordText != confirmPasswordText) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Passwords do not match.")));
+    if (email.isEmpty || passwordText.isEmpty || confirmPasswordText.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("All fields are required.")),
+      );
       return;
     }
 
-    if (isLengthValid && hasUpperAndLower && hasSpecialChar) {
-      Navigator.pushReplacementNamed(context, '/home');
-    } else {
+    if (passwordText != confirmPasswordText) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Passwords do not match.")),
+      );
+      return;
+    }
+
+    if (!isLengthValid || !hasUpperAndLower || !hasSpecialChar) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please fix the password requirements.")),
+      );
+      return;
+    }
+
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: passwordText,
+      );
+//errors for password
+      Navigator.pushReplacementNamed(context, '/home');
+    } on FirebaseAuthException catch (e) {
+      String errorMessage = "Signup failed.";
+      if (e.code == 'email-already-in-use') {
+        errorMessage = "Email already in use.";
+      } else if (e.code == 'invalid-email') {
+        errorMessage = "Invalid email address.";
+      } else if (e.code == 'weak-password') {
+        errorMessage = "Password too weak.";
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
       );
     }
   }
@@ -69,20 +100,18 @@ class _SignupState extends State<Signup> {
         backgroundColor: const Color.fromRGBO(192, 204, 218, 1),
         centerTitle: true,
         title: Text("KENKO",
-        style: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 1.2,
-          color: const Color.fromRGBO(66, 76, 90, 1),
-        )),
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.2,
+              color: const Color.fromRGBO(66, 76, 90, 1),
+            )),
       ),
-      body: SafeArea( // prevent content from overlapping system areas
-        child: SingleChildScrollView( // allows vertical scroll to prevent overflow
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Column(
             children: [
               const SizedBox(height: 50),
-
-              // Form
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: Column(
@@ -143,7 +172,8 @@ class _SignupState extends State<Signup> {
                           ),
                           onPressed: () {
                             setState(() {
-                              _obscureConfirmPassword = !_obscureConfirmPassword;
+                              _obscureConfirmPassword =
+                                  !_obscureConfirmPassword;
                             });
                           },
                         ),
@@ -159,14 +189,11 @@ class _SignupState extends State<Signup> {
                     ),
                     const SizedBox(height: 10),
                     _buildRule("8 or more characters", isLengthValid),
-                    _buildRule(
-                      "At least 1 uppercase & 1 lowercase",
-                      hasUpperAndLower,
-                    ),
+                    _buildRule("At least 1 uppercase & 1 lowercase", hasUpperAndLower),
                     _buildRule("1 special character (!@#\$%^&*)", hasSpecialChar),
                     const SizedBox(height: 30),
 
-                    // Signup button
+                    
                     SizedBox(
                       width: double.infinity,
                       height: 50,
@@ -177,7 +204,7 @@ class _SignupState extends State<Signup> {
                             borderRadius: BorderRadius.circular(30),
                           ),
                         ),
-                        onPressed: _signup,
+                        onPressed: _signup, //sign up
                         child: const Text(
                           "SIGN UP",
                           style: TextStyle(

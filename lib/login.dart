@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart'; 
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -12,6 +13,31 @@ class _LoginState extends State<Login> {
   final _passwordController = TextEditingController();
 
   bool _obscurePassword = true;
+
+  Future<void> _login() async {
+    final email = _usernameController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please fill in all fields.")),
+      );
+      return;
+    }
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      Navigator.pushReplacementNamed(context, '/home'); // Navigate after login
+    } on FirebaseAuthException catch (e) {
+      //  Shows error if login fails
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message ?? "Login failed.")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +58,7 @@ class _LoginState extends State<Login> {
         ),
       ),
       body: SafeArea(
-        // Ensures content stays within visible screen area
         child: SingleChildScrollView(
-          // Prevents overflow by allowing scroll
           child: Column(
             children: [
               const SizedBox(height: 50),
@@ -83,9 +107,7 @@ class _LoginState extends State<Login> {
                             borderRadius: BorderRadius.circular(30),
                           ),
                         ),
-                        onPressed: () {
-                          Navigator.pushReplacementNamed(context, '/home');
-                        },
+                        onPressed: _login, // login handeler
                         child: const Text(
                           "LOG IN",
                           style: TextStyle(
