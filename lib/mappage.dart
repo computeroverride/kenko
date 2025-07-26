@@ -22,9 +22,21 @@ class _FreeMapScreenState extends State<FreeMapScreen> {
       'Gym 3': LatLng(1.3020, 103.8020),
     },
     'Women-Only Gym': {
-      'WGym 1': LatLng(1.3050, 103.8100),
-      'WGym 2': LatLng(1.3060, 103.8110),
-      'WGym 3': LatLng(1.3070, 103.8120),
+      'WGym 1': LatLng(1.2989008, 103.855176), //AMORE FITNESS
+      'WGym 2': LatLng(1.3594916, 103.8852177),//AMORE FITNESS
+      'WGym 3': LatLng(1.3784471, 103.7633144),//AMORE FITNESS
+      'WGym 4': LatLng(1.2989008, 103.855176),//AMORE FITNESS
+      'WGym 5': LatLng(1.28967, 103.85007),//AMORE FITNESS
+      'WGym 6': LatLng(1.2994894, 103.8454842),//AMORE FITNESS
+      'WGym 7': LatLng(1.28233, 103.84996), //MSFIT 24 HOUR
+      'WGym 8': LatLng(1.3229288, 103.9251788), //COUNTOUR EXPRESS
+      'WGym 9': LatLng(1.3540772, 103.8708075),//COUNTOUR EXPRESS
+      'WGym 10': LatLng(1.3535681, 103.9539929),//COUNTOUR EXPRESS
+      'WGym 11': LatLng(1.4269915,103.8372458),//COUNTOUR EXPRESS
+      'WGym 12': LatLng(1.3338599,103.7400148),//COUNTOUR EXPRESS
+      'WGym 13': LatLng(1.3759535,103.9464677),//COUNTOUR EXPRESS
+      'WGym 14': LatLng(1.3531702,103.9427981),//Active.Co
+      'WGym 15': LatLng(1.28967,103.85007),//Active.co
     },
   };
 
