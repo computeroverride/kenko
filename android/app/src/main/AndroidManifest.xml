@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.health.READ_HEALTH_DATA_HISTORY"/>
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
+    <uses-permission android:name="android.permission.health.READ_STEPS"/>
 
     <application
         android:label="kenko"
@@ -26,7 +29,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+                    <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
             </intent-filter>
         </activity>
         
@@ -44,7 +47,6 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-            <uses-permission android:name="android.permission.health.READ_STEPS"/>
     </application>
 
     <queries>
@@ -54,15 +56,11 @@
         </intent>
     </queries>
 <!-- Check whether Health Connect is installed or not -->
-<queries>
-  <package android:name="com.google.android.apps.healthdata" />
-  <intent>
-    <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
-  </intent>
-</queries>
-<uses-permission android:name="android.permission.health.READ_HEALTH_DATA_HISTORY"/>
-<uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
-<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <queries>
+    <package android:name="com.google.android.apps.healthdata" />
+    <intent>
+        <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+    </intent>
+    </queries>
 </manifest>
 
