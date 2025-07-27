@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kenko/logadd.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LogMoodPage extends StatefulWidget {

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:kenko/logadd.dart';
 
 class WorkoutLog extends StatefulWidget {
+  const WorkoutLog({super.key});
+
 @override
   State<WorkoutLog> createState() => _WorkoutLogState();
 }

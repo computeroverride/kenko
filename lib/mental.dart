@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:kenko/logadd.dart';
 import 'dart:math';
@@ -19,7 +18,7 @@ class MentalPage extends StatefulWidget {
 }
 
 class _MentalPageState extends State<MentalPage> {
-  int _selectedIndex = 4; // This page is at index 4 (Mental)
+  final int _selectedIndex = 4; // This page is at index 4 (Mental)
 
   final List<Quote> _quotes = [
     Quote(
