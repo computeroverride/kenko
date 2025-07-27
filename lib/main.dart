@@ -8,6 +8,7 @@ import 'package:kenko/profile.dart';
 import 'package:kenko/signup.dart';
 import 'package:kenko/mental.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:kenko/step.dart';
 import 'package:kenko/workout.dart';
 import 'firebase_options.dart';
 
@@ -30,8 +31,8 @@ void main() async {
         '/activity': (context) => ActivityLog(),
         '/map': (context) => FreeMapScreen(),
         '/mental': (context) => MentalPage(),
-        '/workout': (context) => WorkoutLog()
-
+        '/workout': (context) => WorkoutLog(),
+        '/step': (context) => StepTracker(),
       },
     ),
   );
