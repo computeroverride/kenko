@@ -1,4 +1,7 @@
+import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:health/health.dart';
 
 class StepTracker extends StatefulWidget {
@@ -9,38 +12,48 @@ class StepTracker extends StatefulWidget {
 }
 
 class _StepTrackerState extends State<StepTracker> {
+  final Health _health = Health(); // ✅ correct for health: ^13.x.x
   int _totalSteps = 0;
+  Timer? _timer;
+
   @override
   void initState() {
     super.initState();
     _requestPermissions();
+    _timer = Timer.periodic(const Duration(seconds: 30), (_) => _fetchSteps());
   }
 
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  /// Requests ACTIVITY_RECOGNITION runtime permission (Android 10+)
   Future<void> _requestPermissions() async {
-    // Global Health instance
-    final health = Health();
+    if (Platform.isAndroid) {
+      var status = await Permission.activityRecognition.status;
+      if (!status.isGranted) {
+        await Permission.activityRecognition.request();
+      }
+    }
+    await _fetchSteps();
+  }
 
-    // configure the health plugin before use.
-    await health.configure();
+  /// Fetch today's steps from Health Connect / Google Fit
+  Future<void> _fetchSteps() async {
+    final types = [HealthDataType.STEPS];
+    bool granted = await _health.requestAuthorization(types);
 
-    // define the types to get
-    var types = [HealthDataType.STEPS];
+    if (!granted) {
+      debugPrint("Permission not granted to read steps.");
+      return;
+    }
 
-    // requesting access to the data types before reading them
-    bool requested = await health.requestAuthorization(types);
+    final now = DateTime.now();
+    final midnight = DateTime(now.year, now.month, now.day);
 
-    var now = DateTime.now();
-
-    // fetch health data from the last 24 hours
-    /*List<HealthDataPoint> healthData = await health.getHealthDataFromTypes(
-      now.subtract(Duration(days: 1)),
-      now,
-      types,
-    );*/
-
-    // get the number of steps for today
-    var midnight = DateTime(now.year, now.month, now.day);
-    int? steps = await health.getTotalStepsInInterval(midnight, now);
+    int? steps = await _health.getTotalStepsInInterval(midnight, now);
     setState(() {
       _totalSteps = steps ?? 0;
     });
@@ -51,7 +64,6 @@ class _StepTrackerState extends State<StepTracker> {
     return Scaffold(
       backgroundColor: Colors.white,
 
-      // --- App Bar ---
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(192, 204, 218, 1),
         centerTitle: true,
@@ -61,27 +73,28 @@ class _StepTrackerState extends State<StepTracker> {
             fontSize: 24,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
-            color: Colors.black,
+            color: Colors.blueGrey,
           ),
         ),
       ),
 
-      // --- Body Content ---
       body: Column(
         children: [
-          SizedBox(
+          Container(
             height: 50,
-            child: Container(
-              color: Colors.blueGrey[100],
-              child: Center(
-                child: Text(
-                  "Steps: $_totalSteps",
-                  style: TextStyle(fontSize: 18, color: Colors.blueGrey[800]),
-                ),
+            width: double.infinity,
+            color: Colors.blueGrey[100],
+            child: Center(
+              child: Text(
+                "Steps: $_totalSteps",
+                style: TextStyle(fontSize: 18, color: Colors.blueGrey[800]),
               ),
             ),
           ),
-          TextButton(onPressed: () {}, child: const Text("Start Tracking")),
+          TextButton(
+            onPressed: _fetchSteps,
+            child: const Text("Refresh Steps"),
+          ),
         ],
       ),
     );
