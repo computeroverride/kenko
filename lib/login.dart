@@ -26,7 +26,7 @@ class _LoginState extends State<Login> {
     // If either field is empty, show a snackbar and return early
     if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please fill in all fields.")),
+        const SnackBar(content: Text("Please fill in all field.")),
       );
       return;
     }
