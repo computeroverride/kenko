@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Profile extends StatelessWidget {
   const Profile({super.key});
+
+  // Function to handle logout
+  Future<void> _logout(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      Navigator.pushReplacementNamed(context, '/login');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error logging out: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +53,7 @@ class Profile extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           const Text(
-            "BOO ash", // Displayed user name
+            "Welcome!", // Displayed user name
             style: TextStyle(fontSize: 18, color: Colors.black),
           ),
           const SizedBox(height: 40),
@@ -73,6 +86,17 @@ class Profile extends StatelessWidget {
                   onTap: () {
                     // TODO: Navigate to update personal details screen
                   },
+                ),
+                const Divider(thickness: 1), // Divider line
+
+                // Logout Option
+                ListTile(
+                  leading: Icon(Icons.logout, color: Colors.blueGrey), // Logout icon
+                  title: const Text(
+                    "Log Out",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  onTap: () => _logout(context), // Call logout function
                 ),
                 const Divider(thickness: 1), // Divider line
               ],

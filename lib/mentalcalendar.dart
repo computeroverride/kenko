@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kenko/logadd.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:table_calendar/table_calendar.dart';
+import 'package:kenko/logadd.dart';
 
 class LogMoodPage extends StatefulWidget {
   const LogMoodPage({super.key});
@@ -14,8 +15,10 @@ class _LogMoodPageState extends State<LogMoodPage> {
   Map<DateTime, String> moodLog = {};
   DateTime focusedDay = DateTime.now();
   DateTime? selectedDay;
-
   int _selectedIndex = 0;
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   void initState() {
@@ -23,7 +26,7 @@ class _LogMoodPageState extends State<LogMoodPage> {
     _loadMoodsFromFirestore();
   }
 
-   void _onItemTapped(int index) {
+  void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
@@ -91,25 +94,61 @@ class _LogMoodPageState extends State<LogMoodPage> {
   }
 
   Future<void> _saveMoodToFirestore(String dateKey, String mood) async {
-    final moodsCollection = FirebaseFirestore.instance.collection('moods');
-    await moodsCollection.doc(dateKey).set({'mood': mood});
+    final user = _auth.currentUser;
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please log in to save mood.')),
+      );
+      return;
+    }
+    try {
+      await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('moods')
+          .doc(dateKey)
+          .set({
+        'mood': mood,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error saving mood: $e')),
+      );
+    }
   }
 
   Future<void> _loadMoodsFromFirestore() async {
-    final moodsCollection = FirebaseFirestore.instance.collection('moods');
-    final snapshot = await moodsCollection.get();
+    final user = _auth.currentUser;
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please log in to view moods.')),
+      );
+      return;
+    }
+    try {
+      final snapshot = await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('moods')
+          .get();
 
-    setState(() {
-      moodLog.clear();
-      for (var doc in snapshot.docs) {
-        final mood = doc.data()['mood'];
-        final parts = doc.id.split('-');
-        final year = int.parse(parts[0]);
-        final month = int.parse(parts[1]);
-        final day = int.parse(parts[2]);
-        moodLog[DateTime(year, month, day)] = mood;
-      }
-    });
+      setState(() {
+        moodLog.clear();
+        for (var doc in snapshot.docs) {
+          final mood = doc.data()['mood'];
+          final parts = doc.id.split('-');
+          final year = int.parse(parts[0]);
+          final month = int.parse(parts[1]);
+          final day = int.parse(parts[2]);
+          moodLog[DateTime(year, month, day)] = mood;
+        }
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error loading moods: $e')),
+      );
+    }
   }
 
   @override
@@ -169,7 +208,6 @@ class _LogMoodPageState extends State<LogMoodPage> {
           const Text("Tap any day to log your mood"),
         ],
       ),
-
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         currentIndex: _selectedIndex,
@@ -182,7 +220,7 @@ class _LogMoodPageState extends State<LogMoodPage> {
             showModalBottomSheet(
               context: context,
               backgroundColor: Colors.white,
-              builder: (context) => LogAdd(),
+              builder: (context) => const LogAdd(),
             );
           } else if (index == 0) {
             Navigator.pushReplacementNamed(context, '/home');
