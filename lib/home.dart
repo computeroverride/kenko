@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kenko/logadd.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -11,16 +13,33 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _selectedIndex = 0; // Tracks currently selected bottom navigation index
+  String _username = "User"; // Added to store username
 
   @override
   void initState() {
     super.initState();
     _requestPermissions();
+    _fetchUsername(); // Fetch username from Firestore
   }
 
   Future<void> _requestPermissions() async {
     await Permission.activityRecognition.request();
     await Permission.location.request();
+  }
+
+  Future<void> _fetchUsername() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      if (doc.exists && doc.data() != null) {
+        setState(() {
+          _username = doc.get('username') ?? "User";
+        });
+      }
+    }
   }
 
   void _onItemTapped(int index) {
@@ -38,13 +57,13 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(192, 204, 218, 1),
         centerTitle: true,
-        title: const Text(
+        title: Text(
           "HOME",
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
-            color: Colors.blueGrey, // <-- changed
+            color: Colors.blueGrey,
           ),
         ),
         actions: [
@@ -53,6 +72,23 @@ class _HomeState extends State<Home> {
             onPressed: () {
               Navigator.pushReplacementNamed(context, '/profile'); // Go to profile page
             },
+          ),
+        ],
+      ),
+
+      // --- Body content ---
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              "Welcome, $_username!", // Displays username
+              style: const TextStyle(fontSize: 20, color: Colors.black),
+            ),
+          ),
+          // Rest of the body (expandable area for future content)
+          Expanded(
+            child: Container(),
           ),
         ],
       ),

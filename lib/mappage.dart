@@ -139,7 +139,7 @@ class _FreeMapScreenState extends State<FreeMapScreen> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.account_circle),
+            icon: Icon(Icons.account_circle, color: Colors.blueGrey),
             onPressed: () {
               Navigator.pushReplacementNamed(context, '/profile');
             },

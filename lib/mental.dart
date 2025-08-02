@@ -183,9 +183,8 @@ class _MentalPageState extends State<MentalPage> {
           Padding(
             padding: EdgeInsets.only(right: 16.0),
             child: CircleAvatar(
-              backgroundColor: Colors.white70,
               radius: 16,
-              child: Icon(Icons.person, size: 18, color: Colors.black54),
+              child: Icon(Icons.account_circle, color: Colors.blueGrey),
             ),
           ),
         ],

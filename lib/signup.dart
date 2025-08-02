@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Firebase Authentication package
+import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore package
 import 'login.dart';
 
 class Signup extends StatefulWidget {
@@ -11,6 +12,7 @@ class Signup extends StatefulWidget {
 
 class _SignupState extends State<Signup> {
   // Controllers to retrieve user input from text fields
+  final _usernameController = TextEditingController(); // Added for username input
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -54,9 +56,10 @@ class _SignupState extends State<Signup> {
     final email = _emailController.text.trim();
     final passwordText = _passwordController.text.trim();
     final confirmPasswordText = _confirmPasswordController.text.trim();
+    final username = _usernameController.text.trim(); // Get username
 
     // Check if any field is empty
-    if (email.isEmpty || passwordText.isEmpty || confirmPasswordText.isEmpty) {
+    if (email.isEmpty || passwordText.isEmpty || confirmPasswordText.isEmpty || username.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("All fields are required.")),
       );
@@ -81,13 +84,23 @@ class _SignupState extends State<Signup> {
 
     try {
       // Firebase signup using email and password
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: passwordText,
       );
+      User? user = userCredential.user;
 
-      // Navigate to home after successful signup
-      Navigator.pushReplacementNamed(context, '/home');
+      if (user != null) {
+        // Save user data including username to Firestore
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'username': username,
+          'email': email,
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+
+        // Navigate to home after successful signup
+        Navigator.pushReplacementNamed(context, '/heightweight');
+      }
     } on FirebaseAuthException catch (e) {
       // Handle specific Firebase signup errors
       String errorMessage = "Signup failed.";
@@ -138,6 +151,17 @@ class _SignupState extends State<Signup> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // --- Username TextField ---
+                    TextField(
+                      controller: _usernameController,
+                      decoration: const InputDecoration(
+                        hintText: "Username",
+                        border: InputBorder.none,
+                      ),
+                    ),
+                    const Divider(thickness: 1),
+                    const SizedBox(height: 20),
+
                     // --- Email TextField ---
                     TextField(
                       controller: _emailController,

@@ -11,7 +11,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:kenko/step.dart';
 import 'package:kenko/workout.dart';
 import 'firebase_options.dart';
-
+import 'heightweight.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +33,7 @@ void main() async {
         '/mental': (context) => MentalPage(),
         '/workout': (context) => WorkoutLog(),
         '/step': (context) => StepTracker(),
+        '/heightweight': (context) => HeightWeight(),
       },
     ),
   );
