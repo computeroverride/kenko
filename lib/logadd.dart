@@ -16,7 +16,7 @@ class LogAdd extends StatelessWidget {
         children: [
           // --- Food and Water Log Option ---
           ListTile(
-            leading: const Icon(Icons.rice_bowl, color: Colors.blueGrey),
+            leading: const Icon(Icons.rice_bowl, color: Color.fromRGBO(24, 2, 12, 121)),
             title: const Text(
               "Food and Water Log",
               style: TextStyle(
@@ -34,7 +34,7 @@ class LogAdd extends StatelessWidget {
 
           // --- Activity Log Option ---
           ListTile(
-            leading: const Icon(Icons.local_activity, color: Colors.blueGrey),
+            leading: const Icon(Icons.local_activity, color: Color.fromRGBO(24, 2, 12, 121)),
             title: const Text(
               "Activity Log",
               style: TextStyle(

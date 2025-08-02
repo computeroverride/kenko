@@ -126,7 +126,7 @@ class _FreeMapScreenState extends State<FreeMapScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(192, 204, 218, 1),
+        backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
         centerTitle: true,
         title: Text(
           "Find Nearby Places",
@@ -134,12 +134,12 @@ class _FreeMapScreenState extends State<FreeMapScreen> {
             fontSize: 24,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
-            color: const Color.fromRGBO(66, 76, 90, 1),
+            color: Colors.white,
           ),
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.account_circle, color: Colors.blueGrey),
+            icon: Icon(Icons.account_circle, color: Colors.white),
             onPressed: () {
               Navigator.pushReplacementNamed(context, '/profile');
             },
@@ -232,10 +232,10 @@ class _FreeMapScreenState extends State<FreeMapScreen> {
                 ],
               ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
         currentIndex: _selectedIndex,
-        selectedItemColor: const Color.fromRGBO(66, 76, 90, 1),
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: const Color.fromRGBO(24, 2, 12, 1),
+        unselectedItemColor: const Color.fromRGBO(149, 144, 168, 1),
         showUnselectedLabels: true,
         type: BottomNavigationBarType.fixed,
         onTap: (index) {

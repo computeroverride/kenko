@@ -168,7 +168,7 @@ class _MentalPageState extends State<MentalPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(192, 204, 218, 1),
+        backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
         centerTitle: true,
         title: const Text(
           "MENTAL WELLBEING",
@@ -176,16 +176,15 @@ class _MentalPageState extends State<MentalPage> {
             fontSize: 24,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
-            color: Color.fromRGBO(66, 76, 90, 1),
+            color: Colors.white,
           ),
         ),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 16.0),
-            child: CircleAvatar(
-              radius: 16,
-              child: Icon(Icons.account_circle, color: Colors.blueGrey),
-            ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.account_circle, color: Colors.white), 
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, '/profile'); // Go to profile page
+            },
           ),
         ],
       ),
@@ -202,7 +201,7 @@ class _MentalPageState extends State<MentalPage> {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.favorite_border, color: Colors.black87),
+                    const Icon(Icons.favorite_border, color: Color.fromRGBO(24, 2, 12, 1)),
                     const SizedBox(width: 8),
                     Text(
                       "$_likeCount/$_maxLikes",
@@ -214,9 +213,9 @@ class _MentalPageState extends State<MentalPage> {
                         borderRadius: BorderRadius.circular(20),
                         child: LinearProgressIndicator(
                           value: progress,
-                          backgroundColor: const Color(0xFFDBE3EC),
+                          backgroundColor: const Color.fromRGBO(187, 203, 203, 1),
                           valueColor: const AlwaysStoppedAnimation<Color>(
-                            Colors.deepPurple,
+                             Color.fromRGBO(99, 75, 102, 1),
                           ),
                           minHeight: 8,
                         ),
@@ -243,7 +242,7 @@ class _MentalPageState extends State<MentalPage> {
                 child: Container(
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Color(0xFF4A5C6A),
+                    color: Color.fromRGBO(149, 144, 168, 1),
                   ),
                   padding: const EdgeInsets.all(16),
                   child: const Icon(
@@ -264,7 +263,7 @@ class _MentalPageState extends State<MentalPage> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF8C97A1),
+                  backgroundColor: const Color.fromRGBO(24, 2, 12, 1),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
@@ -296,10 +295,10 @@ class _MentalPageState extends State<MentalPage> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
         currentIndex: _selectedIndex,
-        selectedItemColor: const Color.fromRGBO(66, 76, 90, 1),
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: const Color.fromRGBO(24, 2, 12, 1),
+        unselectedItemColor: const Color.fromRGBO(149, 144, 168, 1),
         showUnselectedLabels: true,
         type: BottomNavigationBarType.fixed,
         onTap: _onItemTapped,

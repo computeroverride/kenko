@@ -55,7 +55,7 @@ class _HomeState extends State<Home> {
 
       // --- App Bar ---
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(192, 204, 218, 1),
+        backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
         centerTitle: true,
         title: Text(
           "HOME",
@@ -63,12 +63,12 @@ class _HomeState extends State<Home> {
             fontSize: 24,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
-            color: Colors.blueGrey,
+            color: Colors.white,
           ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.account_circle, color: Colors.blueGrey), 
+            icon: const Icon(Icons.account_circle, color: Colors.white), 
             onPressed: () {
               Navigator.pushReplacementNamed(context, '/profile'); // Go to profile page
             },
@@ -78,6 +78,7 @@ class _HomeState extends State<Home> {
 
       // --- Body content ---
       body: Column(
+        
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -95,10 +96,10 @@ class _HomeState extends State<Home> {
 
       // --- Bottom Navigation Bar ---
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blueGrey,
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: const Color.fromRGBO(24, 2, 12, 1),
+        unselectedItemColor: const Color.fromRGBO(149, 144, 168, 1),
         showUnselectedLabels: true,
         type: BottomNavigationBarType.fixed,
 
