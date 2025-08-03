@@ -125,7 +125,7 @@ class _SignupState extends State<Signup> {
         children: [
           Center(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 50, 10, 50),
+              padding: const EdgeInsets.fromLTRB(10, 30, 10, 30),
               child: Text(
                 "KENKO",
                 style: TextStyle(
@@ -154,6 +154,15 @@ class _SignupState extends State<Signup> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text(
+                        "Create your account",
+                        style: TextStyle(
+                          fontSize: 28, 
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1,
+                        ),
+                      ),
+                      const Text("Sign up to continue"),
                       const SizedBox(height: 20),
                       // --- Username TextField ---
                       TextField(

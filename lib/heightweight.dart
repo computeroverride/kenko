@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart'; // For date formatting
+import 'package:intl/intl.dart'; //For date formatting
 
 class HeightWeight extends StatefulWidget {
   const HeightWeight({super.key});
@@ -15,7 +15,8 @@ class _HeightWeightState extends State<HeightWeight> {
   final _weightController = TextEditingController();
   String? _gender; // Using String for radio selection
   DateTime? _dob; // Using DateTime for calendar selection
-  int? _age; // To store calculated age
+  int? _age;  // To store calculated age
+
 
   Future<void> _saveAndContinue() async {
     final height = double.tryParse(_heightController.text.trim()) ?? 0.0;
@@ -23,7 +24,7 @@ class _HeightWeightState extends State<HeightWeight> {
 
     if (height <= 0 || weight <= 0 || _gender == null || _dob == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please fill in all fields with valid numbers.")),
+        const SnackBar(content: Text("Please fill in all fields with valid values.")),
       );
       return;
     }
@@ -38,7 +39,6 @@ class _HeightWeightState extends State<HeightWeight> {
           _age = _age! - 1; // Adjust age if birthday hasn't occurred this year
         }
 
-        // Calculate BMI: weight(kg) / (height(m))^2
         final heightInMeters = height / 100;
         final bmi = weight / (heightInMeters * heightInMeters);
 
@@ -78,128 +78,161 @@ class _HeightWeightState extends State<HeightWeight> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(192, 204, 218, 1),
-        centerTitle: true,
-        title: Text(
-          "KENKO",
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.2,
-            color: const Color.fromRGBO(66, 76, 90, 1),
-          ),
-        ),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 50),
-                const Text(
-                  "Enter Your Details",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      backgroundColor: const Color.fromRGBO(99, 75, 102, 1), 
+      body: Column(
+        children: [
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 30, 10, 30),
+              child: Text(
+                "KENKO",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 48, 
+                  fontWeight: FontWeight.w200,
+                  letterSpacing: 1.2,
                 ),
-                const SizedBox(height: 20),
-                TextField(
-                  controller: _heightController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    hintText: "Height (cm)",
-                    border: InputBorder.none,
-                  ),
-                ),
-                const Divider(thickness: 1),
-                const SizedBox(height: 20),
-                TextField(
-                  controller: _weightController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    hintText: "Weight (kg)",
-                    border: InputBorder.none,
-                  ),
-                ),
-                const Divider(thickness: 1),
-                const SizedBox(height: 20),
-                const Text(
-                  "Gender",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                ),
-                Row(
-                  children: [
-                    Radio<String>(
-                      value: "Male",
-                      groupValue: _gender,
-                      onChanged: (value) {
-                        setState(() {
-                          _gender = value;
-                        });
-                      },
-                    ),
-                    const Text("Male"),
-                    Radio<String>(
-                      value: "Female",
-                      groupValue: _gender,
-                      onChanged: (value) {
-                        setState(() {
-                          _gender = value;
-                        });
-                      },
-                    ),
-                    const Text("Female"),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  "Date of Birth",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                ),
-                GestureDetector(
-                  onTap: () => _selectDate(context),
-                  child: AbsorbPointer(
-                    child: TextField(
-                      controller: TextEditingController(
-                        text: _dob != null ? DateFormat('yyyy-MM-dd').format(_dob!) : '',
-                      ),
-                      decoration: const InputDecoration(
-                        hintText: "Select Date",
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                ),
-                const Divider(thickness: 1),
-                const SizedBox(height: 40),
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromRGBO(66, 76, 90, 1),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
-                    onPressed: _saveAndContinue,
-                    child: const Text(
-                      "CONTINUE",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-              ],
+              ),
             ),
           ),
-        ),
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(60),
+                  topRight: Radius.circular(60),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(40.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Enter your details",
+                        style: TextStyle(
+                          fontSize: 28, 
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1,
+                        ),
+                      ),
+                      const Text("Help us personalize your experience"),
+                      const SizedBox(height: 20),
+                      TextField(
+                        controller: _heightController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          hintText: "Height (cm)",
+                          hintStyle: TextStyle(color: Colors.grey),
+                          border: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey), 
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      TextField(
+                        controller: _weightController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          hintText: "Weight (kg)",
+                          hintStyle: TextStyle(color: Colors.grey),
+                          border: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey), 
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        "Gender",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Radio<String>(
+                            value: "Male",
+                            groupValue: _gender,
+                            activeColor: const Color.fromRGBO(70, 34, 85, 1), 
+                            onChanged: (value) {
+                              setState(() {
+                                _gender = value;
+                              });
+                            },
+                          ),
+                          const Text("Male"),
+                          Radio<String>(
+                            value: "Female",
+                            groupValue: _gender,
+                            activeColor: const Color.fromRGBO(70, 34, 85, 1), 
+                            onChanged: (value) {
+                              setState(() {
+                                _gender = value;
+                              });
+                            },
+                          ),
+                          const Text("Female"),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        "Date of Birth",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => _selectDate(context),
+                        child: AbsorbPointer(
+                          child: TextField(
+                            controller: TextEditingController(
+                              text: _dob != null ? DateFormat('yyyy-MM-dd').format(_dob!) : '',
+                            ),
+                            decoration: const InputDecoration(
+                              hintText: "Select Date",
+                              hintStyle: TextStyle(color: Colors.grey),
+                              border: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color.fromRGBO(70, 34, 85, 1),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30)),
+                            ),
+                            onPressed: _saveAndContinue,
+                            child: const Text(
+                              "CONTINUE",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1,
+                                color: Colors.white,
+                                ),
+                            ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
