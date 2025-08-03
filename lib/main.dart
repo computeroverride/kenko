@@ -11,7 +11,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:kenko/workout.dart';
 import 'firebase_options.dart';
 import 'heightweight.dart';
-
+import 'dashboard.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -30,6 +30,7 @@ void main() async {
         '/mental': (context) => MentalPage(),
         '/workout': (context) => WorkoutLog(),
         '/heightweight': (context) => HeightWeight(),
+        '/dashboard': (context) => const Dashboard(),
       },
     ),
   );

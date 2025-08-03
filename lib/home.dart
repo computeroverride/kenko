@@ -229,7 +229,11 @@ class _HomeState extends State<Home> {
               context,
               '/mental',
             ); // Navigate to mental
-          } else {
+          }
+          else if(index == 1){
+            Navigator.pushReplacementNamed(context, '/dashboard');
+          }
+           else {
             _onItemTapped(index); // Switch to home or dashboard tab
           }
         },

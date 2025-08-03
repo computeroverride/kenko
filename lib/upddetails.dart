@@ -56,7 +56,7 @@ class _UpdateDetailsState extends State<UpdateDetails> {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         // Calculate age based on DOB and current date
-        final now = DateTime(2025, 8, 2, 16, 12); 
+        final now = DateTime.now(); // Updated to use current date and time (08:57 AM +08, August 03, 2025)
         _age = now.year - _dob!.year;
         if (_dob!.month > now.month || (_dob!.month == now.month && _dob!.day > now.day)) {
           _age = _age! - 1; // Adjust age if birthday hasn't occurred this year
@@ -66,6 +66,7 @@ class _UpdateDetailsState extends State<UpdateDetails> {
         final heightInMeters = height / 100;
         final bmi = weight / (heightInMeters * heightInMeters);
 
+        // Update main user document
         await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
           'height': height,
           'weight': weight,
@@ -73,6 +74,16 @@ class _UpdateDetailsState extends State<UpdateDetails> {
           'dob': _dob!.toIso8601String(), // Store DOB as ISO string
           'age': _age, // Store calculated age
           'bmi': bmi, // Store calculated BMI
+        });
+
+        // Log the new weight to weight_logs
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .collection('weight_logs')
+            .add({
+          'weight': weight,
+          'timestamp': FieldValue.serverTimestamp(),
         });
 
         Navigator.pop(context); // Return to Profile page
