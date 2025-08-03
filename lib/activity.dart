@@ -59,7 +59,7 @@ class _ActivityLogState extends State<ActivityLog> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(192, 204, 218, 1),
+        backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
         centerTitle: true,
         title: const Text(
           "ADD TO ACTIVITY LOG",
@@ -67,9 +67,17 @@ class _ActivityLogState extends State<ActivityLog> {
             fontSize: 24,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.account_circle, color: Colors.white), 
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, '/profile'); // Go to profile page
+            },
+          ),
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -122,7 +130,7 @@ class _ActivityLogState extends State<ActivityLog> {
                   height: 50,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueGrey,
+                      backgroundColor: const Color.fromRGBO(70, 34, 85, 1),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -144,10 +152,10 @@ class _ActivityLogState extends State<ActivityLog> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blueGrey,
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: const Color.fromRGBO(24, 2, 12, 1),
+        unselectedItemColor: const Color.fromRGBO(149, 144, 168, 1),
         showUnselectedLabels: true,
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
@@ -163,6 +171,8 @@ class _ActivityLogState extends State<ActivityLog> {
             Navigator.pushReplacementNamed(context, '/map');
           } else if (index == 4) {
             Navigator.pushReplacementNamed(context, '/mental');
+          } else if (index == 1) {
+            Navigator.pushReplacementNamed(context, '/dashboard');
           } else {
             _onItemTapped(index);
           }

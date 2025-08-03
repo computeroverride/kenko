@@ -53,6 +53,7 @@ class _LogMoodPageState extends State<LogMoodPage> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
+        backgroundColor: Colors.white,
         title: const Text("Select Your Mood"),
         content: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -154,13 +155,31 @@ class _LogMoodPageState extends State<LogMoodPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("Mood Tracker"),
-        backgroundColor: const Color.fromRGBO(192, 204, 218, 1),
+        backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
+        centerTitle: true,
+        title: const Text(
+          "MOOD TRACKER",
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.2,
+            color: Colors.white,
+          ),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.account_circle, color: Colors.white),
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, '/profile');
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -209,10 +228,10 @@ class _LogMoodPageState extends State<LogMoodPage> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
         currentIndex: _selectedIndex,
-        selectedItemColor: const Color.fromRGBO(66, 76, 90, 1),
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: const Color.fromRGBO(24, 2, 12, 1),
+        unselectedItemColor: const Color.fromRGBO(149, 144, 168, 1),
         showUnselectedLabels: true,
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
@@ -226,22 +245,20 @@ class _LogMoodPageState extends State<LogMoodPage> {
             Navigator.pushReplacementNamed(context, '/home');
           } else if (index == 3) {
             Navigator.pushReplacementNamed(context, '/map');
+          } else if (index == 1) {
+            Navigator.pushReplacementNamed(context, '/dashboard');
+          } else if (index == 4) {
+            Navigator.pushReplacementNamed(context, '/mental');
           } else {
             _onItemTapped(index);
           }
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard),
-            label: 'Dashboard',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.dashboard),label: 'Dashboard'),
           BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: 'Add'),
           BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.self_improvement),
-            label: 'Mental',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.self_improvement),label: 'Mental'),
         ],
       ),
     );

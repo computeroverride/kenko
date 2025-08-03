@@ -129,7 +129,7 @@ class _FreeMapScreenState extends State<FreeMapScreen> {
         backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
         centerTitle: true,
         title: Text(
-          "Find Nearby Places",
+          "FIND NEARBY PLACES",
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -249,6 +249,8 @@ class _FreeMapScreenState extends State<FreeMapScreen> {
             Navigator.pushReplacementNamed(context, '/home');
           } else if (index == 4) {
             Navigator.pushReplacementNamed(context, '/mental');
+          } else if (index == 1) {
+            Navigator.pushReplacementNamed(context, '/dashboard');
           } else {
             _onItemTapped(index);
           }

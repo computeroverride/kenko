@@ -115,15 +115,15 @@ class _UpdateDetailsState extends State<UpdateDetails> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(192, 204, 218, 1),
+        backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
         centerTitle: true,
         title: Text(
-          "KENKO",
+          "UPDATE YOUR DETAILS",
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
-            color: const Color.fromRGBO(66, 76, 90, 1),
+            color: Colors.white,
           ),
         ),
       ),
@@ -135,16 +135,11 @@ class _UpdateDetailsState extends State<UpdateDetails> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 50),
-                const Text(
-                  "Update Your Details",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 20),
                 TextField(
                   controller: _heightController,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
-                    hintText: "Height (cm)",
+                    labelText: "Height (cm)",
                     border: InputBorder.none,
                   ),
                 ),
@@ -154,7 +149,7 @@ class _UpdateDetailsState extends State<UpdateDetails> {
                   controller: _weightController,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
-                    hintText: "Weight (kg)",
+                    labelText: "Weight (kg)",
                     border: InputBorder.none,
                   ),
                 ),
@@ -214,7 +209,7 @@ class _UpdateDetailsState extends State<UpdateDetails> {
                   height: 50,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromRGBO(66, 76, 90, 1),
+                      backgroundColor: const Color.fromRGBO(70, 34, 85, 1),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),

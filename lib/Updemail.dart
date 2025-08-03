@@ -71,7 +71,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(192, 204, 218, 1),
+        backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -79,40 +79,44 @@ class _UpdateEmailState extends State<UpdateEmail> {
           },
         ),
         title: const Text(
-          "PROFILE",
+          "UPDATE EMAIL",
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
-            color: Color.fromRGBO(66, 76, 90, 1),
+            color: Colors.white
           ),
         ),
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(30),
         child: Column(
           children: [
             TextField(
               controller: _currentEmailController,
-              decoration: const InputDecoration(labelText: 'Current Email Address'),
+              decoration: const InputDecoration(labelText: 'Current Email Address', border: InputBorder.none,),
             ),
-            const SizedBox(height: 16),
+            const Divider(thickness: 1),
+            const SizedBox(height: 20),
             TextField(
               controller: _newEmailController,
-              decoration: const InputDecoration(labelText: 'New Email Address'),
+              decoration: const InputDecoration(labelText: 'New Email Address', border: InputBorder.none,),
             ),
-            const SizedBox(height: 16),
+            const Divider(thickness: 1),
+            const SizedBox(height: 20),
             TextField(
               controller: _confirmEmailController,
-              decoration: const InputDecoration(labelText: 'Confirm new Email Address'),
+              decoration: const InputDecoration(labelText: 'Confirm new Email Address', border: InputBorder.none,),
             ),
-            const SizedBox(height: 16),
+            const Divider(thickness: 1),
+            const SizedBox(height: 20),
             TextField(
               controller: _passwordController,
               obscureText: _obscurePassword,
               decoration: InputDecoration(
-                labelText: 'Current Password',
+                labelText: 'Current Password', 
+                border: InputBorder.none,
                 suffixIcon: IconButton(
                   icon: Icon(
                     _obscurePassword ? Icons.visibility_off : Icons.visibility,
@@ -125,11 +129,27 @@ class _UpdateEmailState extends State<UpdateEmail> {
                 ),
               ),
             ),
+            const Divider(thickness: 1),
             const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: _updateEmail,
-              child: const Text('CONTINUE'),
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromRGBO(70, 34, 85, 1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                onPressed: _updateEmail,
+                child: const Text('CONTINUE',
+                  style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
+                        color: Colors.white,)
+                  )
             ),
+            )
           ],
         ),
       ),

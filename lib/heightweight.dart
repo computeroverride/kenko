@@ -126,7 +126,7 @@ class _HeightWeightState extends State<HeightWeight> {
                         controller: _heightController,
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
-                          hintText: "Height (cm)",
+                          labelText: "Height (cm)",
                           hintStyle: TextStyle(color: Colors.grey),
                           border: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey), 
@@ -138,7 +138,7 @@ class _HeightWeightState extends State<HeightWeight> {
                         controller: _weightController,
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
-                          hintText: "Weight (kg)",
+                          labelText: "Weight (kg)",
                           hintStyle: TextStyle(color: Colors.grey),
                           border: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey), 
@@ -195,7 +195,7 @@ class _HeightWeightState extends State<HeightWeight> {
                               text: _dob != null ? DateFormat('yyyy-MM-dd').format(_dob!) : '',
                             ),
                             decoration: const InputDecoration(
-                              hintText: "Select Date",
+                              labelText: "Select Date",
                               hintStyle: TextStyle(color: Colors.grey),
                               border: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.grey),

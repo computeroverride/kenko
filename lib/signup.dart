@@ -169,7 +169,7 @@ class _SignupState extends State<Signup> {
                         controller: _usernameController,
                         textAlign: TextAlign.left,
                         decoration: const InputDecoration(
-                          hintText: "Username",
+                          labelText: "Username",
                           hintStyle: TextStyle(color: Colors.grey),
                           border: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
@@ -182,7 +182,7 @@ class _SignupState extends State<Signup> {
                         controller: _emailController,
                         textAlign: TextAlign.left,
                         decoration: const InputDecoration(
-                          hintText: "Email",
+                          labelText: "Email",
                           hintStyle: TextStyle(color: Colors.grey),
                           border: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
@@ -201,7 +201,7 @@ class _SignupState extends State<Signup> {
                           });
                         },
                         decoration: InputDecoration(
-                          hintText: "Password",
+                          labelText: "Password",
                           hintStyle: const TextStyle(color: Colors.grey),
                           border: const UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
@@ -227,7 +227,7 @@ class _SignupState extends State<Signup> {
                         controller: _confirmPasswordController,
                         obscureText: _obscureConfirmPassword,
                         decoration: InputDecoration(
-                          hintText: "Confirm Password",
+                          labelText: "Confirm Password",
                           hintStyle: const TextStyle(color: Colors.grey),
                           border: const UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),

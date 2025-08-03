@@ -53,10 +53,10 @@ class _ProfileState extends State<Profile> {
       backgroundColor: Colors.white, // Page background color set to white
       // --- Top App Bar ---
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(192, 204, 218, 1), // Light blue-grey header
+        backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
         centerTitle: true, // Centers the title text
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color.fromRGBO(66, 76, 90, 1)),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pushReplacementNamed(context, '/home'); // Navigate to Home page
           },
@@ -67,7 +67,7 @@ class _ProfileState extends State<Profile> {
             fontSize: 24,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
-            color: const Color.fromRGBO(66, 76, 90, 1), // Dark greyish text color
+            color: Colors.white// Dark greyish text color
           ),
         ),
       ),
@@ -79,7 +79,7 @@ class _ProfileState extends State<Profile> {
           // --- Profile Avatar and Name ---
           const CircleAvatar(
             radius: 45, // Size of circular avatar
-            backgroundColor: Colors.black, // Background of avatar circle
+            backgroundColor: const Color.fromRGBO(24, 2, 12, 1), // Background of avatar circle
             child: Icon(
               Icons.account_circle, // Profile icon inside avatar
               size: 50,
@@ -102,7 +102,7 @@ class _ProfileState extends State<Profile> {
                 ListTile(
                   leading: Icon(
                     Icons.circle,
-                    color: Colors.blueGrey,
+                    color: const Color.fromRGBO(70, 34, 85, 1),
                   ), // Icon before text
                   title: const Text(
                     "Update Email",
@@ -120,7 +120,7 @@ class _ProfileState extends State<Profile> {
                 ListTile(
                   leading: Icon(
                     Icons.circle,
-                    color: Colors.blueGrey,
+                    color: const Color.fromRGBO(70, 34, 85, 1)
                   ), // Icon before text
                   title: const Text(
                     "Update Personal Details",
@@ -138,7 +138,7 @@ class _ProfileState extends State<Profile> {
                 ListTile(
                   leading: Icon(
                     Icons.logout,
-                    color: Colors.blueGrey,
+                    color: const Color.fromRGBO(70, 34, 85, 1),
                   ), // Logout icon
                   title: const Text(
                     "Log Out",

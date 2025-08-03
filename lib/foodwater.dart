@@ -65,17 +65,25 @@ class _FoodWaterLogState extends State<FoodWaterLog> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(192, 204, 218, 1),
+        backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
         centerTitle: true,
         title: const Text(
           "ADD TO FOOD AND WATER LOG",
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 24,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
-            color: Colors.blueGrey,
+            color: Colors.white,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.account_circle, color: Colors.white), 
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, '/profile'); // Go to profile page
+            },
+          ),
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -118,7 +126,7 @@ class _FoodWaterLogState extends State<FoodWaterLog> {
                   height: 50,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueGrey,
+                      backgroundColor: const Color.fromRGBO(70, 34, 85, 1),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -140,10 +148,10 @@ class _FoodWaterLogState extends State<FoodWaterLog> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blueGrey,
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: const Color.fromRGBO(24, 2, 12, 1),
+        unselectedItemColor: const Color.fromRGBO(149, 144, 168, 1),
         showUnselectedLabels: true,
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
@@ -151,11 +159,16 @@ class _FoodWaterLogState extends State<FoodWaterLog> {
             showModalBottomSheet(
               context: context,
               builder: (context) => LogAdd(),
+              backgroundColor: Colors.white,
             );
           } else if (index == 0) {
             Navigator.pushReplacementNamed(context, '/home');
           } else if (index == 3) {
             Navigator.pushReplacementNamed(context, '/map');
+          } else if (index == 1) {
+            Navigator.pushReplacementNamed(context, '/dashboard');
+          } else if (index == 4 ) {
+            Navigator.pushReplacementNamed(context, '/mental');
           } else {
             _onItemTapped(index);
           }

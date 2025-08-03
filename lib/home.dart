@@ -480,6 +480,7 @@ class _HomeState extends State<Home> {
     bool confirm = await showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
         title: Text('Start New Day'),
         content: Text('Are you sure you want to reset today\'s data? This will clear all food, water, and step records for the current day.'),
         actions: [
@@ -575,16 +576,18 @@ class _HomeState extends State<Home> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Welcome, $_username!",
-                style: const TextStyle(fontSize: 20, color: Colors.black),
-              ),
+              Center(
+                child: Text(
+                  "Welcome, $_username!",
+                  style: const TextStyle(fontSize: 20, color: Color.fromARGB(255, 8, 5, 5)),
+                ),
+              ), 
               const SizedBox(height: 20),
               // Step tracking section
               Container(
                 height: 50,
                 width: double.infinity,
-                color: Colors.blueGrey[100],
+                color: const Color.fromRGBO(229, 255, 222, 170),
                 child: Center(
                   child: Text(
                     "Steps: $_totalSteps",
@@ -595,7 +598,7 @@ class _HomeState extends State<Home> {
               Container(
                 height: 50,
                 width: double.infinity,
-                color: Colors.blueGrey[100],
+                color: const Color.fromRGBO(187, 203, 203, 170),
                 child: Center(
                   child: Text(
                     "Distance: ${(_totalDistance / 1000).toStringAsFixed(2)} km",
@@ -605,7 +608,9 @@ class _HomeState extends State<Home> {
               ),
               TextButton(
                 onPressed: _fetchStepData,
-                child: const Text("Refresh Step Data"),
+                child: Center(
+                  child: Text("Refresh Step Data"),
+                ),
               ),
               const SizedBox(height: 20),
               // Calorie and Water Trackers
@@ -619,6 +624,7 @@ class _HomeState extends State<Home> {
                           "Calories: $consumedCalories kcal",
                           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                         ),
+                        SizedBox(height: 10),
                         Container(
                           height: 200,
                           child: DoughnutChart(
@@ -638,6 +644,7 @@ class _HomeState extends State<Home> {
                           "Water: $totalGlasses glasses",
                           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                         ),
+                        SizedBox(height: 10),
                         Container(
                           height: 200,
                           child: DoughnutChart(
@@ -747,16 +754,28 @@ class _HomeState extends State<Home> {
               const SizedBox(height: 20),
               // New Day Button
               Center(
-                child: ElevatedButton(
+                child: SizedBox(
+                  height: 40,
+                  width: double.infinity,
+                  child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
+                    backgroundColor: const Color.fromRGBO(70, 34, 85, 1),
+                    shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50.0), // Rounded edges
+                          ),
                   ),
                   onPressed: _startNewDay,
                   child: const Text(
-                    'New Day',
-                    style: TextStyle(color: Colors.white),
+                    'NEW DAY',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1),
                   ),
                 ),
+                )
+                
               ),
             ],
           ),

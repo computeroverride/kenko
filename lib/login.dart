@@ -99,7 +99,7 @@ class _LoginState extends State<Login> {
                         controller: _usernameController, // Binds input to controller
                         textAlign: TextAlign.left,
                         decoration: const InputDecoration(
-                          hintText: "Enter Email", // Placeholder text
+                          labelText: "Enter Email", // Placeholder text
                           hintStyle: TextStyle(color: Colors.grey),
                           border: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey), // Line under textfield
@@ -114,7 +114,7 @@ class _LoginState extends State<Login> {
                         textAlign: TextAlign.left,
                         obscureText: _obscurePassword, // Controls password visibility
                         decoration: InputDecoration(
-                          hintText: "Password",
+                          labelText: "Password",
                           hintStyle: const TextStyle(color: Colors.grey),
                           border: const UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
