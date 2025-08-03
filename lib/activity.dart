@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kenko/logadd.dart';
 
@@ -11,6 +13,41 @@ class ActivityLog extends StatefulWidget {
 class _ActivityLogState extends State<ActivityLog> {
   int _selectedIndex = 0;
 
+  // Controllers for activity input
+  final _activityNameController = TextEditingController();
+  final _repsController = TextEditingController();
+  final _minutesController = TextEditingController();
+  final _caloriesController = TextEditingController();
+
+  Future<void> _addActivity() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final reps = int.tryParse(_repsController.text) ?? 0;
+    final minutes = int.tryParse(_minutesController.text) ?? 0;
+    final calories = double.tryParse(_caloriesController.text) ?? 0.0;
+
+    if (_activityNameController.text.isNotEmpty && calories > 0) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('activity_logs')
+          .add({
+        'activityName': _activityNameController.text,
+        'reps': reps,
+        'minutes': minutes,
+        'calories': calories,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    }
+
+    _activityNameController.clear();
+    _repsController.clear();
+    _minutesController.clear();
+    _caloriesController.clear();
+    Navigator.pushReplacementNamed(context, '/home'); // Return to Home
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index; // Tracks which nav item is selected
@@ -21,8 +58,6 @@ class _ActivityLogState extends State<ActivityLog> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
-      // --- App Bar ---
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(192, 204, 218, 1),
         centerTitle: true,
@@ -36,42 +71,52 @@ class _ActivityLogState extends State<ActivityLog> {
           ),
         ),
       ),
-
-      // --- Body Content ---
-      body: Column(
-        children: [
-          const SizedBox(height: 50),
-          Padding(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: Column(
               children: [
-                // --- Workout Button ---
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueGrey, // updated color
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/workout');
-                    },
-                    child: const Text(
-                      "WORKOUT",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1,
-                        color: Colors.white,
-                      ),
-                    ),
+                const SizedBox(height: 50),
+                TextField(
+                  controller: _activityNameController,
+                  decoration: const InputDecoration(
+                    hintText: "Activity Name",
+                    border: InputBorder.none,
                   ),
                 ),
+                const Divider(thickness: 1),
                 const SizedBox(height: 20),
-
-                // --- Steps Button ---
+                TextField(
+                  controller: _repsController,
+                  decoration: const InputDecoration(
+                    hintText: "Reps",
+                    border: InputBorder.none,
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
+                const Divider(thickness: 1),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: _minutesController,
+                  decoration: const InputDecoration(
+                    hintText: "Minutes",
+                    border: InputBorder.none,
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
+                const Divider(thickness: 1),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: _caloriesController,
+                  decoration: const InputDecoration(
+                    hintText: "Calories Burned",
+                    border: InputBorder.none,
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
+                const Divider(thickness: 1),
+                const SizedBox(height: 40),
                 SizedBox(
                   width: double.infinity,
                   height: 50,
@@ -82,11 +127,9 @@ class _ActivityLogState extends State<ActivityLog> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/step');
-                    },
+                    onPressed: _addActivity,
                     child: const Text(
-                      "STEPS",
+                      "ADD",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1,
@@ -98,14 +141,12 @@ class _ActivityLogState extends State<ActivityLog> {
               ],
             ),
           ),
-        ],
+        ),
       ),
-
-      // --- Bottom Navigation Bar ---
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blueGrey, // updated color
+        selectedItemColor: Colors.blueGrey,
         unselectedItemColor: Colors.grey,
         showUnselectedLabels: true,
         type: BottomNavigationBarType.fixed,
@@ -114,7 +155,7 @@ class _ActivityLogState extends State<ActivityLog> {
             showModalBottomSheet(
               context: context,
               backgroundColor: Colors.white,
-              builder: (context) => const LogAdd(),
+              builder: (context) => LogAdd(),
             );
           } else if (index == 0) {
             Navigator.pushReplacementNamed(context, '/home');

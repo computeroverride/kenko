@@ -6,6 +6,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:health/health.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -24,11 +26,27 @@ class _HomeState extends State<Home> {
   double _totalDistance = 0.0; // meters
   Timer? _timer;
 
+  // Calorie tracking variables
+  double? dailyCalorieGoal;
+  double consumedCalories = 0; // Only food calories
+  double activityCalories = 0; // Calories burned from activity
+  List<Map<String, dynamic>> foodLogs = [];
+  List<Map<String, dynamic>> activityLogs = [];
+
+  // Water tracking variables
+  final int waterGoal = 8; // Goal of 8 glasses
+  int totalGlasses = 0;
+  List<Map<String, dynamic>> waterLogs = [];
+
   @override
   void initState() {
     super.initState();
     _requestPermissions();
-    _fetchUsername(); // Fetch username from Firestore
+    _fetchUsername();
+    _fetchUserData();
+    _fetchFoodLogs();
+    _fetchWaterLogs();
+    _fetchActivityLogs();
     _timer = Timer.periodic(
       const Duration(seconds: 30),
       (_) => _fetchStepData(),
@@ -56,10 +74,7 @@ class _HomeState extends State<Home> {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       DocumentSnapshot doc =
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user.uid)
-              .get();
+          await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
       if (doc.exists && doc.data() != null) {
         setState(() {
           _username = doc.get('username') ?? "User";
@@ -68,9 +83,340 @@ class _HomeState extends State<Home> {
     }
   }
 
-  /// Fetch today's steps and distance
+  Future<void> _fetchUserData() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+    if (doc.exists) {
+      final data = doc.data()!;
+      final weight = data['weight'] as double;
+      final height = data['height'] as double;
+      final age = data['age'] as int;
+      final gender = data['gender'] as String;
+
+      // Mifflin-St Jeor Equation for BMR
+      double bmr = (gender == 'Male')
+          ? (10 * weight) + (6.25 * height) - (5 * age) + 5
+          : (10 * weight) + (6.25 * height) - (5 * age) - 161;
+      // Adjust for weight loss (20% deficit)
+      dailyCalorieGoal = bmr * 0.8;
+      setState(() {});
+    }
+  }
+
+  Future<void> _fetchFoodLogs() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('food_logs')
+        .orderBy('timestamp', descending: true)
+        .get();
+
+    setState(() {
+      consumedCalories = 0; // Reset before recalculating
+      foodLogs = snapshot.docs.map((doc) {
+        final data = doc.data();
+        consumedCalories += (data['calories'] as num).toDouble();
+        return {
+          'id': doc.id,
+          'foodName': data['foodName'],
+          'calories': (data['calories'] as num).toDouble(),
+          'timestamp': (data['timestamp'] as Timestamp).toDate(),
+        };
+      }).toList();
+    });
+  }
+
+  Future<void> _fetchWaterLogs() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('water_logs')
+        .orderBy('timestamp', descending: true)
+        .get();
+
+    setState(() {
+      totalGlasses = 0; // Reset before recalculating
+      waterLogs = snapshot.docs.map((doc) {
+        final data = doc.data();
+        final glasses = (data['glasses'] as num).toInt(); // Cast num to int
+        totalGlasses += glasses;
+        return {
+          'id': doc.id,
+          'glasses': glasses,
+          'timestamp': (data['timestamp'] as Timestamp).toDate(),
+        };
+      }).toList();
+    });
+  }
+
+  Future<void> _fetchActivityLogs() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('activity_logs')
+        .orderBy('timestamp', descending: true)
+        .get();
+
+    setState(() {
+      activityCalories = 0; // Reset before recalculating
+      activityLogs = snapshot.docs.map((doc) {
+        final data = doc.data();
+        activityCalories += (data['calories'] as num).toDouble();
+        return {
+          'id': doc.id,
+          'activityName': data['activityName'],
+          'reps': (data['reps'] as num).toInt(),
+          'minutes': (data['minutes'] as num).toInt(),
+          'calories': (data['calories'] as num).toDouble(),
+          'timestamp': (data['timestamp'] as Timestamp).toDate(),
+        };
+      }).toList();
+    });
+  }
+
+  Future<void> _deleteFoodLog(String id) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('food_logs')
+        .doc(id)
+        .delete();
+    _fetchFoodLogs(); // Refresh logs
+  }
+
+  Future<void> _deleteWaterLog(String id) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final log = waterLogs.firstWhere((log) => log['id'] == id);
+    totalGlasses -= log['glasses'] as int;
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('water_logs')
+        .doc(id)
+        .delete();
+    _fetchWaterLogs(); // Refresh logs
+  }
+
+  Future<void> _deleteActivityLog(String id) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final log = activityLogs.firstWhere((log) => log['id'] == id);
+    activityCalories -= log['calories'];
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('activity_logs')
+        .doc(id)
+        .delete();
+    _fetchActivityLogs(); // Refresh logs
+  }
+
+  Future<void> _editFoodLog(String id, String newFoodName, double newCalories) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final log = foodLogs.firstWhere((log) => log['id'] == id);
+    consumedCalories += newCalories - log['calories'];
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('food_logs')
+        .doc(id)
+        .update({
+      'foodName': newFoodName,
+      'calories': newCalories,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+    _fetchFoodLogs(); // Refresh logs
+  }
+
+  Future<void> _editWaterLog(String id, int newGlasses) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final log = waterLogs.firstWhere((log) => log['id'] == id);
+    totalGlasses += newGlasses - (log['glasses'] as int);
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('water_logs')
+        .doc(id)
+        .update({
+      'glasses': newGlasses,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+    _fetchWaterLogs(); // Refresh logs
+  }
+
+  Future<void> _editActivityLog(String id, String newActivityName, int newReps, int newMinutes, double newCalories) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final log = activityLogs.firstWhere((log) => log['id'] == id);
+    activityCalories += newCalories - log['calories'];
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('activity_logs')
+        .doc(id)
+        .update({
+      'activityName': newActivityName,
+      'reps': newReps,
+      'minutes': newMinutes,
+      'calories': newCalories,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+    _fetchActivityLogs(); // Refresh logs
+  }
+
+  void _showEditFoodDialog(BuildContext context, String id, String foodName, double calories) {
+    final _foodController = TextEditingController(text: foodName);
+    final _calorieController = TextEditingController(text: calories.toString());
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Edit Food Entry'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: _foodController,
+              decoration: InputDecoration(labelText: 'Food Name'),
+            ),
+            TextField(
+              controller: _calorieController,
+              decoration: InputDecoration(labelText: 'Calories'),
+              keyboardType: TextInputType.number,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              final newCalories = double.tryParse(_calorieController.text) ?? 0.0;
+              _editFoodLog(id, _foodController.text, newCalories);
+              Navigator.pop(context);
+            },
+            child: Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showEditWaterDialog(BuildContext context, String id, int glasses) {
+    final _glassesController = TextEditingController(text: glasses.toString());
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Edit Water Entry'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: _glassesController,
+              decoration: InputDecoration(labelText: 'Glasses'),
+              keyboardType: TextInputType.number,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              final newGlasses = int.tryParse(_glassesController.text) ?? 0;
+              _editWaterLog(id, newGlasses);
+              Navigator.pop(context);
+            },
+            child: Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showEditActivityDialog(BuildContext context, String id, String activityName, int reps, int minutes, double calories) {
+    final _activityController = TextEditingController(text: activityName);
+    final _repsController = TextEditingController(text: reps.toString());
+    final _minutesController = TextEditingController(text: minutes.toString());
+    final _calorieController = TextEditingController(text: calories.toString());
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Edit Activity Entry'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: _activityController,
+              decoration: InputDecoration(labelText: 'Activity Name'),
+            ),
+            TextField(
+              controller: _repsController,
+              decoration: InputDecoration(labelText: 'Reps'),
+              keyboardType: TextInputType.number,
+            ),
+            TextField(
+              controller: _minutesController,
+              decoration: InputDecoration(labelText: 'Minutes'),
+              keyboardType: TextInputType.number,
+            ),
+            TextField(
+              controller: _calorieController,
+              decoration: InputDecoration(labelText: 'Calories'),
+              keyboardType: TextInputType.number,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              final newReps = int.tryParse(_repsController.text) ?? 0;
+              final newMinutes = int.tryParse(_minutesController.text) ?? 0;
+              final newCalories = double.tryParse(_calorieController.text) ?? 0.0;
+              _editActivityLog(id, _activityController.text, newReps, newMinutes, newCalories);
+              Navigator.pop(context);
+            },
+            child: Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _fetchStepData() async {
-    await _health.configure(); // required for health: ^13.x.x
+    await _health.configure();
 
     final types = [HealthDataType.STEPS, HealthDataType.DISTANCE_DELTA];
 
@@ -83,13 +429,10 @@ class _HomeState extends State<Home> {
     final now = DateTime.now();
     final midnight = DateTime(now.year, now.month, now.day);
 
-    // Steps (shortcut API)
     int? steps = await _health.getTotalStepsInInterval(midnight, now);
 
-    // Try to get distance using multiple approaches
     double totalDistance = 0.0;
 
-    // Approach 1: Try getting distance data points
     try {
       List<HealthDataPoint> distanceData = await _health.getHealthDataFromTypes(
         startTime: midnight,
@@ -110,10 +453,8 @@ class _HomeState extends State<Home> {
       debugPrint("Error fetching distance data: $e");
     }
 
-    // Approach 2: If no distance found, try estimating from steps (rough approximation)
     if (totalDistance == 0.0 && steps != null && steps > 0) {
-      // Average step length is approximately 0.8 meters
-      totalDistance = steps * 0.8;
+      totalDistance = steps * 0.8; // Average step length approximation
       debugPrint("Estimated distance from steps: $totalDistance meters");
     }
 
@@ -121,23 +462,93 @@ class _HomeState extends State<Home> {
 
     setState(() {
       _totalSteps = steps ?? 0;
-      _totalDistance = totalDistance; // in meters
+      _totalDistance = totalDistance;
     });
   }
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index; // Updates selected index
+      _selectedIndex = index;
     });
+  }
+
+  Future<void> _startNewDay() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    // Show confirmation dialog
+    bool confirm = await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Start New Day'),
+        content: Text('Are you sure you want to reset today\'s data? This will clear all food, water, and step records for the current day.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text('Confirm'),
+          ),
+        ],
+      ),
+    ) ?? false;
+
+    if (confirm) {
+      // Delete all food logs for the day
+      final foodSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('food_logs')
+          .get();
+      for (var doc in foodSnapshot.docs) {
+        await doc.reference.delete();
+      }
+
+      // Delete all water logs for the day
+      final waterSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('water_logs')
+          .get();
+      for (var doc in waterSnapshot.docs) {
+        await doc.reference.delete();
+      }
+
+      // Delete all activity logs for the day
+      final activitySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('activity_logs')
+          .get();
+      for (var doc in activitySnapshot.docs) {
+        await doc.reference.delete();
+      }
+
+      // Reset local state
+      setState(() {
+        consumedCalories = 0;
+        activityCalories = 0;
+        foodLogs.clear();
+        activityLogs.clear();
+        totalGlasses = 0;
+        waterLogs.clear();
+        _totalSteps = 0;
+        _totalDistance = 0.0;
+      });
+
+      // Refresh step data to start fresh
+      await _fetchStepData();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
-      // --- App Bar ---
       appBar: AppBar(
+        automaticallyImplyLeading: false, // Remove the back arrow
         backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
         centerTitle: true,
         title: Text(
@@ -153,59 +564,204 @@ class _HomeState extends State<Home> {
           IconButton(
             icon: const Icon(Icons.account_circle, color: Colors.white),
             onPressed: () {
-              Navigator.pushReplacementNamed(
-                context,
-                '/profile',
-              ); // Go to profile page
+              Navigator.pushReplacementNamed(context, '/profile');
             },
           ),
         ],
       ),
-
-      // --- Body content ---
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              "Welcome, $_username!", // Displays username
-              style: const TextStyle(fontSize: 20, color: Colors.black),
-            ),
-          ),
-          // Step tracking section
-          Container(
-            height: 50,
-            width: double.infinity,
-            color: Colors.blueGrey[100],
-            child: Center(
-              child: Text(
-                "Steps: $_totalSteps",
-                style: TextStyle(fontSize: 18, color: Colors.blueGrey[800]),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Welcome, $_username!",
+                style: const TextStyle(fontSize: 20, color: Colors.black),
               ),
-            ),
-          ),
-          Container(
-            height: 50,
-            width: double.infinity,
-            color: Colors.blueGrey[100],
-            child: Center(
-              child: Text(
-                "Distance: ${(_totalDistance / 1000).toStringAsFixed(2)} km",
-                style: TextStyle(fontSize: 18, color: Colors.blueGrey[800]),
+              const SizedBox(height: 20),
+              // Step tracking section
+              Container(
+                height: 50,
+                width: double.infinity,
+                color: Colors.blueGrey[100],
+                child: Center(
+                  child: Text(
+                    "Steps: $_totalSteps",
+                    style: TextStyle(fontSize: 18, color: Colors.blueGrey[800]),
+                  ),
+                ),
               ),
-            ),
+              Container(
+                height: 50,
+                width: double.infinity,
+                color: Colors.blueGrey[100],
+                child: Center(
+                  child: Text(
+                    "Distance: ${(_totalDistance / 1000).toStringAsFixed(2)} km",
+                    style: TextStyle(fontSize: 18, color: Colors.blueGrey[800]),
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: _fetchStepData,
+                child: const Text("Refresh Step Data"),
+              ),
+              const SizedBox(height: 20),
+              // Calorie and Water Trackers
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (dailyCalorieGoal != null)
+                    Column(
+                      children: [
+                        Text(
+                          "Calories: $consumedCalories kcal",
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        Container(
+                          height: 200,
+                          child: DoughnutChart(
+                            title: "Calories",
+                            goal: dailyCalorieGoal! + activityCalories,
+                            consumed: consumedCalories,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ],
+                    ),
+                  const SizedBox(height: 20),
+                  if (waterGoal != null)
+                    Column(
+                      children: [
+                        Text(
+                          "Water: $totalGlasses glasses",
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        Container(
+                          height: 200,
+                          child: DoughnutChart(
+                            title: "Water",
+                            goal: waterGoal.toDouble(),
+                            consumed: totalGlasses.toDouble(),
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                "Food Log",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: foodLogs.length,
+                itemBuilder: (context, index) {
+                  final log = foodLogs[index];
+                  return ListTile(
+                    title: Text(log['foodName']),
+                    subtitle: Text('${log['calories']} kcal - ${DateFormat('MM/dd HH:mm').format(log['timestamp'])}'),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () => _showEditFoodDialog(context, log['id'], log['foodName'], log['calories']),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () => _deleteFoodLog(log['id']),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                "Water Log",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: waterLogs.length,
+                itemBuilder: (context, index) {
+                  final log = waterLogs[index];
+                  return ListTile(
+                    title: Text('${log['glasses']} glass(es)'),
+                    subtitle: Text('${DateFormat('MM/dd HH:mm').format(log['timestamp'])}'),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () => _showEditWaterDialog(context, log['id'], log['glasses']),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () => _deleteWaterLog(log['id']),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                "Exercise Log",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: activityLogs.length,
+                itemBuilder: (context, index) {
+                  final log = activityLogs[index];
+                  return ListTile(
+                    title: Text(log['activityName']),
+                    subtitle: Text('${log['reps']} reps, ${log['minutes']} min - ${log['calories']} kcal - ${DateFormat('MM/dd HH:mm').format(log['timestamp'])}'),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () => _showEditActivityDialog(context, log['id'], log['activityName'], log['reps'], log['minutes'], log['calories']),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () => _deleteActivityLog(log['id']),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+              // New Day Button
+              Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
+                  ),
+                  onPressed: _startNewDay,
+                  child: const Text(
+                    'New Day',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 20),
-          TextButton(
-            onPressed: _fetchStepData,
-            child: const Text("Refresh Step Data"),
-          ),
-          // Rest of the body (expandable area for future content)
-          Expanded(child: Container()),
-        ],
+        ),
       ),
-
-      // --- Bottom Navigation Bar ---
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
         currentIndex: _selectedIndex,
@@ -213,45 +769,75 @@ class _HomeState extends State<Home> {
         unselectedItemColor: const Color.fromRGBO(149, 144, 168, 1),
         showUnselectedLabels: true,
         type: BottomNavigationBarType.fixed,
-
         onTap: (index) {
           if (index == 2) {
-            // Show add log modal sheet
             showModalBottomSheet(
               context: context,
               backgroundColor: Colors.white,
               builder: (context) => const LogAdd(),
             );
           } else if (index == 3) {
-            Navigator.pushReplacementNamed(context, '/map'); // Navigate to map
+            Navigator.pushReplacementNamed(context, '/map');
           } else if (index == 4) {
-            Navigator.pushReplacementNamed(
-              context,
-              '/mental',
-            ); // Navigate to mental
-          }
-          else if(index == 1){
+            Navigator.pushReplacementNamed(context, '/mental');
+          } else if (index == 1) {
             Navigator.pushReplacementNamed(context, '/dashboard');
-          }
-           else {
-            _onItemTapped(index); // Switch to home or dashboard tab
+          } else {
+            _onItemTapped(index);
           }
         },
-
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard),
-            label: 'Dashboard',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
           BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: 'Add'),
           BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.self_improvement),
-            label: 'Mental',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.self_improvement), label: 'Mental'),
         ],
       ),
+    );
+  }
+}
+
+class DoughnutChart extends StatelessWidget {
+  final String title;
+  final double goal;
+  final double consumed;
+  final Color color;
+
+  DoughnutChart({required this.title, required this.goal, required this.consumed, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    final remaining = goal - consumed;
+    return Column(
+      children: [
+        Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        SizedBox(
+          height: 150,
+          child: PieChart(
+            PieChartData(
+              sectionsSpace: 2,
+              centerSpaceRadius: 40,
+              sections: [
+                PieChartSectionData(
+                  color: color,
+                  value: consumed,
+                  title: '$consumed',
+                  radius: 60,
+                  titleStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
+                ),
+                PieChartSectionData(
+                  color: color.withOpacity(0.3),
+                  value: remaining > 0 ? remaining : 0,
+                  title: remaining > 0 ? '${remaining.toStringAsFixed(0)}' : '0',
+                  radius: 60,
+                  titleStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

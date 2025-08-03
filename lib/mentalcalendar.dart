@@ -220,7 +220,7 @@ class _LogMoodPageState extends State<LogMoodPage> {
             showModalBottomSheet(
               context: context,
               backgroundColor: Colors.white,
-              builder: (context) => const LogAdd(),
+              builder: (context) => LogAdd(),
             );
           } else if (index == 0) {
             Navigator.pushReplacementNamed(context, '/home');

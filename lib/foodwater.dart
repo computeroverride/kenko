@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kenko/logadd.dart';
 
@@ -16,6 +18,42 @@ class _FoodWaterLogState extends State<FoodWaterLog> {
   final _caloriesController = TextEditingController();
   final _glassesController = TextEditingController();
 
+  Future<void> _addLog() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final calories = double.tryParse(_caloriesController.text) ?? 0.0;
+    final glasses = int.tryParse(_glassesController.text) ?? 0;
+
+    if (_foodNameController.text.isNotEmpty && calories > 0) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('food_logs')
+          .add({
+        'foodName': _foodNameController.text,
+        'calories': calories,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    }
+
+    if (glasses > 0) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('water_logs')
+          .add({
+        'glasses': glasses,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    }
+
+    _foodNameController.clear();
+    _caloriesController.clear();
+    _glassesController.clear();
+    Navigator.pushReplacementNamed(context, '/home'); // Return to Home
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index; // Track selected bottom nav index
@@ -26,8 +64,6 @@ class _FoodWaterLogState extends State<FoodWaterLog> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
-      // --- App Bar ---
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(192, 204, 218, 1),
         centerTitle: true,
@@ -37,12 +73,10 @@ class _FoodWaterLogState extends State<FoodWaterLog> {
             fontSize: 20,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
-            color: Colors.blueGrey, // updated color
+            color: Colors.blueGrey,
           ),
         ),
       ),
-
-      // --- Body Content ---
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -50,8 +84,6 @@ class _FoodWaterLogState extends State<FoodWaterLog> {
             child: Column(
               children: [
                 const SizedBox(height: 50),
-
-                // --- Food Name Field ---
                 TextField(
                   controller: _foodNameController,
                   decoration: const InputDecoration(
@@ -61,43 +93,37 @@ class _FoodWaterLogState extends State<FoodWaterLog> {
                 ),
                 const Divider(thickness: 1),
                 const SizedBox(height: 20),
-
-                // --- Calories Field ---
                 TextField(
                   controller: _caloriesController,
                   decoration: const InputDecoration(
                     hintText: "Calories",
                     border: InputBorder.none,
                   ),
+                  keyboardType: TextInputType.number,
                 ),
                 const Divider(thickness: 1),
                 const SizedBox(height: 20),
-
-                // --- Glasses of Water Field ---
                 TextField(
                   controller: _glassesController,
                   decoration: const InputDecoration(
-                    hintText: "Glasses of Water",
+                    hintText: "Glasses of Water (Goal: 8)",
                     border: InputBorder.none,
                   ),
+                  keyboardType: TextInputType.number,
                 ),
                 const Divider(thickness: 1),
                 const SizedBox(height: 40),
-
-                // --- Add Button ---
                 SizedBox(
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueGrey, // updated color
+                      backgroundColor: Colors.blueGrey,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/home');
-                    },
+                    onPressed: _addLog,
                     child: const Text(
                       "ADD",
                       style: TextStyle(
@@ -113,12 +139,10 @@ class _FoodWaterLogState extends State<FoodWaterLog> {
           ),
         ),
       ),
-
-      // --- Bottom Navigation Bar ---
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blueGrey, // updated color
+        selectedItemColor: Colors.blueGrey,
         unselectedItemColor: Colors.grey,
         showUnselectedLabels: true,
         type: BottomNavigationBarType.fixed,
@@ -126,7 +150,7 @@ class _FoodWaterLogState extends State<FoodWaterLog> {
           if (index == 2) {
             showModalBottomSheet(
               context: context,
-              builder: (context) => const LogAdd(),
+              builder: (context) => LogAdd(),
             );
           } else if (index == 0) {
             Navigator.pushReplacementNamed(context, '/home');

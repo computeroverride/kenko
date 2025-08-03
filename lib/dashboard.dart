@@ -4,7 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
-
+import 'logadd.dart';
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
 
@@ -173,7 +173,11 @@ class _DashboardState extends State<Dashboard> {
             case 1:
               break;
             case 2:
-              Navigator.pushReplacementNamed(context, '/add');
+               showModalBottomSheet(
+          context: context,
+          backgroundColor: Colors.white,
+          builder: (context) => LogAdd(),
+        );
               break;
             case 3:
               Navigator.pushReplacementNamed(context, '/map');

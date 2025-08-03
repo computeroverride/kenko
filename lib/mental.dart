@@ -125,7 +125,7 @@ class _MentalPageState extends State<MentalPage> {
         showModalBottomSheet(
           context: context,
           backgroundColor: Colors.white,
-          builder: (context) => const LogAdd(),
+          builder: (context) => LogAdd(),
         );
         break;
       case 3:
