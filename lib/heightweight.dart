@@ -15,8 +15,7 @@ class _HeightWeightState extends State<HeightWeight> {
   final _weightController = TextEditingController();
   String? _gender; // Using String for radio selection
   DateTime? _dob; // Using DateTime for calendar selection
-  int? _age;  // To store calculated age
-
+  int? _age; // To store calculated age
 
   Future<void> _saveAndContinue() async {
     final height = double.tryParse(_heightController.text.trim()) ?? 0.0;
@@ -24,7 +23,9 @@ class _HeightWeightState extends State<HeightWeight> {
 
     if (height <= 0 || weight <= 0 || _gender == null || _dob == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please fill in all fields with valid values.")),
+        const SnackBar(
+          content: Text("Please fill in all fields with valid values."),
+        ),
       );
       return;
     }
@@ -33,30 +34,40 @@ class _HeightWeightState extends State<HeightWeight> {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         // Calculate age based on DOB and current date
-        final now = DateTime(2025, 8, 2, 16, 8); // Current date: 2025-08-02 16:08 +08
+        final now = DateTime(
+          2025,
+          8,
+          2,
+          16,
+          8,
+        ); // Current date: 2025-08-02 16:08 +08
         _age = now.year - _dob!.year;
-        if (_dob!.month > now.month || (_dob!.month == now.month && _dob!.day > now.day)) {
+        if (_dob!.month > now.month ||
+            (_dob!.month == now.month && _dob!.day > now.day)) {
           _age = _age! - 1; // Adjust age if birthday hasn't occurred this year
         }
 
         final heightInMeters = height / 100;
         final bmi = weight / (heightInMeters * heightInMeters);
 
-        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
-          'height': height,
-          'weight': weight,
-          'gender': _gender,
-          'dob': _dob!.toIso8601String(), // Store DOB as ISO string
-          'age': _age, // Store calculated age
-          'bmi': bmi, // Store calculated BMI
-        });
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({
+              'height': height,
+              'weight': weight,
+              'gender': _gender,
+              'dob': _dob!.toIso8601String(), // Store DOB as ISO string
+              'age': _age, // Store calculated age
+              'bmi': bmi, // Store calculated BMI
+            });
 
         Navigator.pushReplacementNamed(context, '/home');
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error saving data: $e")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error saving data: $e")));
     }
   }
 
@@ -78,7 +89,7 @@ class _HeightWeightState extends State<HeightWeight> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(99, 75, 102, 1), 
+      backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
       body: Column(
         children: [
           Center(
@@ -88,7 +99,7 @@ class _HeightWeightState extends State<HeightWeight> {
                 "KENKO",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 48, 
+                  fontSize: 48,
                   fontWeight: FontWeight.w200,
                   letterSpacing: 1.2,
                 ),
@@ -115,7 +126,7 @@ class _HeightWeightState extends State<HeightWeight> {
                       Text(
                         "Enter your details",
                         style: TextStyle(
-                          fontSize: 28, 
+                          fontSize: 28,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1,
                         ),
@@ -129,7 +140,7 @@ class _HeightWeightState extends State<HeightWeight> {
                           labelText: "Height (cm)",
                           hintStyle: TextStyle(color: Colors.grey),
                           border: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey), 
+                            borderSide: BorderSide(color: Colors.grey),
                           ),
                         ),
                       ),
@@ -141,7 +152,7 @@ class _HeightWeightState extends State<HeightWeight> {
                           labelText: "Weight (kg)",
                           hintStyle: TextStyle(color: Colors.grey),
                           border: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey), 
+                            borderSide: BorderSide(color: Colors.grey),
                           ),
                         ),
                       ),
@@ -158,7 +169,7 @@ class _HeightWeightState extends State<HeightWeight> {
                           Radio<String>(
                             value: "Male",
                             groupValue: _gender,
-                            activeColor: const Color.fromRGBO(70, 34, 85, 1), 
+                            activeColor: const Color.fromRGBO(70, 34, 85, 1),
                             onChanged: (value) {
                               setState(() {
                                 _gender = value;
@@ -169,7 +180,7 @@ class _HeightWeightState extends State<HeightWeight> {
                           Radio<String>(
                             value: "Female",
                             groupValue: _gender,
-                            activeColor: const Color.fromRGBO(70, 34, 85, 1), 
+                            activeColor: const Color.fromRGBO(70, 34, 85, 1),
                             onChanged: (value) {
                               setState(() {
                                 _gender = value;
@@ -192,7 +203,10 @@ class _HeightWeightState extends State<HeightWeight> {
                         child: AbsorbPointer(
                           child: TextField(
                             controller: TextEditingController(
-                              text: _dob != null ? DateFormat('yyyy-MM-dd').format(_dob!) : '',
+                              text:
+                                  _dob != null
+                                      ? DateFormat('yyyy-MM-dd').format(_dob!)
+                                      : '',
                             ),
                             decoration: const InputDecoration(
                               labelText: "Select Date",
@@ -210,19 +224,25 @@ class _HeightWeightState extends State<HeightWeight> {
                         height: 50,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromRGBO(70, 34, 85, 1),
+                            backgroundColor: const Color.fromRGBO(
+                              70,
+                              34,
+                              85,
+                              1,
+                            ),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30)),
+                              borderRadius: BorderRadius.circular(30),
                             ),
-                            onPressed: _saveAndContinue,
-                            child: const Text(
-                              "CONTINUE",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1,
-                                color: Colors.white,
-                                ),
+                          ),
+                          onPressed: _saveAndContinue,
+                          child: const Text(
+                            "CONTINUE",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1,
+                              color: Colors.white,
                             ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),

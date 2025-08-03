@@ -11,12 +11,16 @@ class LogAdd extends StatelessWidget {
 
       child: Column(
         mainAxisSize: MainAxisSize.min, // Height adjusts based on content
-        crossAxisAlignment: CrossAxisAlignment.stretch, // Children stretch horizontally
+        crossAxisAlignment:
+            CrossAxisAlignment.stretch, // Children stretch horizontally
 
         children: [
           // --- Food and Water Log Option ---
           ListTile(
-            leading: const Icon(Icons.rice_bowl, color: Color.fromRGBO(24, 2, 12, 121)),
+            leading: const Icon(
+              Icons.rice_bowl,
+              color: Color.fromRGBO(24, 2, 12, 121),
+            ),
             title: const Text(
               "Food and Water Log",
               style: TextStyle(
@@ -27,14 +31,20 @@ class LogAdd extends StatelessWidget {
             ),
             onTap: () {
               Navigator.pop(context); // Close the bottom sheet
-              Navigator.pushReplacementNamed(context, '/food&water'); // Navigate to food & water log page
+              Navigator.pushReplacementNamed(
+                context,
+                '/food&water',
+              ); // Navigate to food & water log page
             },
           ),
           const Divider(thickness: 1),
 
           // --- Activity Log Option ---
           ListTile(
-            leading: const Icon(Icons.local_activity, color: Color.fromRGBO(24, 2, 12, 121)),
+            leading: const Icon(
+              Icons.local_activity,
+              color: Color.fromRGBO(24, 2, 12, 121),
+            ),
             title: const Text(
               "Activity Log",
               style: TextStyle(
@@ -45,7 +55,10 @@ class LogAdd extends StatelessWidget {
             ),
             onTap: () {
               Navigator.pop(context); // Close the bottom sheet
-              Navigator.pushReplacementNamed(context, '/activity'); // Navigate to activity log page
+              Navigator.pushReplacementNamed(
+                context,
+                '/activity',
+              ); // Navigate to activity log page
             },
           ),
           const Divider(thickness: 1),

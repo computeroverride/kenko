@@ -12,6 +12,7 @@ import 'package:kenko/workout.dart';
 import 'firebase_options.dart';
 import 'heightweight.dart';
 import 'dashboard.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);

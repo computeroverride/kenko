@@ -26,16 +26,20 @@ class _UpdateDetailsState extends State<UpdateDetails> {
   Future<void> _fetchUserData() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      DocumentSnapshot doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .get();
+      DocumentSnapshot doc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
       if (doc.exists && doc.data() != null) {
         setState(() {
           _heightController.text = (doc.get('height')?.toString() ?? '');
           _weightController.text = (doc.get('weight')?.toString() ?? '');
           _gender = doc.get('gender') as String?;
-          _dob = doc.get('dob') != null ? DateTime.parse(doc.get('dob') as String) : null;
+          _dob =
+              doc.get('dob') != null
+                  ? DateTime.parse(doc.get('dob') as String)
+                  : null;
         });
       }
     }
@@ -47,7 +51,9 @@ class _UpdateDetailsState extends State<UpdateDetails> {
 
     if (height <= 0 || weight <= 0 || _gender == null || _dob == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please fill in all fields with valid numbers.")),
+        const SnackBar(
+          content: Text("Please fill in all fields with valid numbers."),
+        ),
       );
       return;
     }
@@ -56,9 +62,11 @@ class _UpdateDetailsState extends State<UpdateDetails> {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         // Calculate age based on DOB and current date
-        final now = DateTime.now(); // Updated to use current date and time (08:57 AM +08, August 03, 2025)
+        final now =
+            DateTime.now(); // Updated to use current date and time (08:57 AM +08, August 03, 2025)
         _age = now.year - _dob!.year;
-        if (_dob!.month > now.month || (_dob!.month == now.month && _dob!.day > now.day)) {
+        if (_dob!.month > now.month ||
+            (_dob!.month == now.month && _dob!.day > now.day)) {
           _age = _age! - 1; // Adjust age if birthday hasn't occurred this year
         }
 
@@ -67,31 +75,31 @@ class _UpdateDetailsState extends State<UpdateDetails> {
         final bmi = weight / (heightInMeters * heightInMeters);
 
         // Update main user document
-        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
-          'height': height,
-          'weight': weight,
-          'gender': _gender,
-          'dob': _dob!.toIso8601String(), // Store DOB as ISO string
-          'age': _age, // Store calculated age
-          'bmi': bmi, // Store calculated BMI
-        });
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({
+              'height': height,
+              'weight': weight,
+              'gender': _gender,
+              'dob': _dob!.toIso8601String(), // Store DOB as ISO string
+              'age': _age, // Store calculated age
+              'bmi': bmi, // Store calculated BMI
+            });
 
         // Log the new weight to weight_logs
         await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
             .collection('weight_logs')
-            .add({
-          'weight': weight,
-          'timestamp': FieldValue.serverTimestamp(),
-        });
+            .add({'weight': weight, 'timestamp': FieldValue.serverTimestamp()});
 
         Navigator.pop(context); // Return to Profile page
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error saving data: $e")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error saving data: $e")));
     }
   }
 
@@ -193,7 +201,10 @@ class _UpdateDetailsState extends State<UpdateDetails> {
                   child: AbsorbPointer(
                     child: TextField(
                       controller: TextEditingController(
-                        text: _dob != null ? DateFormat('yyyy-MM-dd').format(_dob!) : '',
+                        text:
+                            _dob != null
+                                ? DateFormat('yyyy-MM-dd').format(_dob!)
+                                : '',
                       ),
                       decoration: const InputDecoration(
                         hintText: "Select Date",

@@ -79,7 +79,7 @@ class _ProfileState extends State<Profile> {
           // --- Profile Avatar and Name ---
           const CircleAvatar(
             radius: 45, // Size of circular avatar
-            backgroundColor: const Color.fromRGBO(24, 2, 12, 1), // Background of avatar circle
+            backgroundColor: Color.fromRGBO(24, 2, 12, 1), // Background of avatar circle
             child: Icon(
               Icons.account_circle, // Profile icon inside avatar
               size: 50,

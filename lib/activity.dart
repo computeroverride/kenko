@@ -33,12 +33,12 @@ class _ActivityLogState extends State<ActivityLog> {
           .doc(user.uid)
           .collection('activity_logs')
           .add({
-        'activityName': _activityNameController.text,
-        'reps': reps,
-        'minutes': minutes,
-        'calories': calories,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
+            'activityName': _activityNameController.text,
+            'reps': reps,
+            'minutes': minutes,
+            'calories': calories,
+            'timestamp': FieldValue.serverTimestamp(),
+          });
     }
 
     _activityNameController.clear();
@@ -72,9 +72,12 @@ class _ActivityLogState extends State<ActivityLog> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.account_circle, color: Colors.white), 
+            icon: const Icon(Icons.account_circle, color: Colors.white),
             onPressed: () {
-              Navigator.pushReplacementNamed(context, '/profile'); // Go to profile page
+              Navigator.pushReplacementNamed(
+                context,
+                '/profile',
+              ); // Go to profile page
             },
           ),
         ],
@@ -179,10 +182,16 @@ class _ActivityLogState extends State<ActivityLog> {
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard),
+            label: 'Dashboard',
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: 'Add'),
           BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
-          BottomNavigationBarItem(icon: Icon(Icons.self_improvement), label: 'Mental'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.self_improvement),
+            label: 'Mental',
+          ),
         ],
       ),
     );

@@ -12,7 +12,8 @@ class Signup extends StatefulWidget {
 
 class _SignupState extends State<Signup> {
   // Controllers to retrieve user input from text fields
-  final _usernameController = TextEditingController(); // Added for username input
+  final _usernameController =
+      TextEditingController(); // Added for username input
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -26,15 +27,21 @@ class _SignupState extends State<Signup> {
 
   // --- Password Validation Rules ---
   bool get isLengthValid => password.length >= 8; // At least 8 characters
-  bool get hasUpperAndLower => RegExp(r'(?=.*[a-z])(?=.*[A-Z])').hasMatch(password); // Must contain uppercase & lowercase
-  bool get hasSpecialChar => RegExp(r'[!@#\$%\^&\*]').hasMatch(password); // Must contain a special character
+  bool get hasUpperAndLower => RegExp(
+    r'(?=.*[a-z])(?=.*[A-Z])',
+  ).hasMatch(password); // Must contain uppercase & lowercase
+  bool get hasSpecialChar => RegExp(
+    r'[!@#\$%\^&\*]',
+  ).hasMatch(password); // Must contain a special character
 
   // Builds a row showing if a password rule is met or not
   Widget _buildRule(String text, bool passed) {
     return Row(
       children: [
         Icon(
-          passed ? Icons.check_circle : Icons.cancel, // Shows check or cross icon
+          passed
+              ? Icons.check_circle
+              : Icons.cancel, // Shows check or cross icon
           color: passed ? Colors.green : Colors.red,
         ),
         const SizedBox(width: 8),
@@ -57,18 +64,21 @@ class _SignupState extends State<Signup> {
     final username = _usernameController.text.trim(); // Get username
 
     // Check if any field is empty
-    if (email.isEmpty || passwordText.isEmpty || confirmPasswordText.isEmpty || username.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("All fields are required.")),
-      );
+    if (email.isEmpty ||
+        passwordText.isEmpty ||
+        confirmPasswordText.isEmpty ||
+        username.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("All fields are required.")));
       return;
     }
 
     // Check if passwords match
     if (passwordText != confirmPasswordText) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Passwords do not match.")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Passwords do not match.")));
       return;
     }
 
@@ -82,10 +92,8 @@ class _SignupState extends State<Signup> {
 
     try {
       // Firebase signup using email and password
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: passwordText,
-      );
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: passwordText);
       User? user = userCredential.user;
 
       if (user != null) {
@@ -110,9 +118,9 @@ class _SignupState extends State<Signup> {
       }
 
       // Display error message in snackbar
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(errorMessage)));
     }
   }
 
@@ -157,7 +165,7 @@ class _SignupState extends State<Signup> {
                       Text(
                         "Create your account",
                         style: TextStyle(
-                          fontSize: 28, 
+                          fontSize: 28,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1,
                         ),
@@ -197,7 +205,8 @@ class _SignupState extends State<Signup> {
                         obscureText: _obscurePassword, // Hide text if true
                         onChanged: (val) {
                           setState(() {
-                            password = val; // Updates password to check rules live
+                            password =
+                                val; // Updates password to check rules live
                           });
                         },
                         decoration: InputDecoration(
@@ -209,7 +218,8 @@ class _SignupState extends State<Signup> {
                           suffixIcon: IconButton(
                             icon: Icon(
                               _obscurePassword
-                                  ? Icons.visibility_off // Hidden state icon
+                                  ? Icons
+                                      .visibility_off // Hidden state icon
                                   : Icons.visibility, // Visible state icon
                               color: Colors.grey,
                             ),
@@ -222,7 +232,7 @@ class _SignupState extends State<Signup> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      // --- Confirm Password TextField --- 
+                      // --- Confirm Password TextField ---
                       TextField(
                         controller: _confirmPasswordController,
                         obscureText: _obscureConfirmPassword,
@@ -241,7 +251,8 @@ class _SignupState extends State<Signup> {
                             ),
                             onPressed: () {
                               setState(() {
-                                _obscureConfirmPassword = !_obscureConfirmPassword;
+                                _obscureConfirmPassword =
+                                    !_obscureConfirmPassword;
                               });
                             },
                           ),
@@ -258,8 +269,14 @@ class _SignupState extends State<Signup> {
                       ),
                       const SizedBox(height: 10),
                       _buildRule("8 or more characters", isLengthValid),
-                      _buildRule("At least 1 uppercase & 1 lowercase", hasUpperAndLower),
-                      _buildRule("1 special character (!@#\$%^&*)", hasSpecialChar),
+                      _buildRule(
+                        "At least 1 uppercase & 1 lowercase",
+                        hasUpperAndLower,
+                      ),
+                      _buildRule(
+                        "1 special character (!@#\$%^&*)",
+                        hasSpecialChar,
+                      ),
                       const SizedBox(height: 30),
                       // --- Signup Button ---
                       Center(
@@ -267,34 +284,42 @@ class _SignupState extends State<Signup> {
                           height: 50,
                           width: double.infinity,
                           child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color.fromRGBO(70, 34, 85, 1),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50.0),
-                                ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color.fromRGBO(
+                                70,
+                                34,
+                                85,
+                                1,
                               ),
-                              onPressed: _signup, // Calls signup function
-                              child: const Text(
-                                "SIGN UP",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  letterSpacing: 1,
-                                ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50.0),
+                              ),
+                            ),
+                            onPressed: _signup, // Calls signup function
+                            child: const Text(
+                              "SIGN UP",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                letterSpacing: 1,
                               ),
                             ),
                           ),
                         ),
-                
+                      ),
+
                       const SizedBox(height: 20),
                       // --- Navigate to Login ---
                       Center(
                         child: GestureDetector(
-                          onTap: () => Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (_) => const Login()),
-                          ),
+                          onTap:
+                              () => Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const Login(),
+                                ),
+                              ),
                           child: const Text(
                             "Already have an account? Log in",
                             style: TextStyle(color: Colors.grey),

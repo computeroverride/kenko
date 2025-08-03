@@ -31,10 +31,10 @@ class _FoodWaterLogState extends State<FoodWaterLog> {
           .doc(user.uid)
           .collection('food_logs')
           .add({
-        'foodName': _foodNameController.text,
-        'calories': calories,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
+            'foodName': _foodNameController.text,
+            'calories': calories,
+            'timestamp': FieldValue.serverTimestamp(),
+          });
     }
 
     if (glasses > 0) {
@@ -42,10 +42,7 @@ class _FoodWaterLogState extends State<FoodWaterLog> {
           .collection('users')
           .doc(user.uid)
           .collection('water_logs')
-          .add({
-        'glasses': glasses,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
+          .add({'glasses': glasses, 'timestamp': FieldValue.serverTimestamp()});
     }
 
     _foodNameController.clear();
@@ -78,9 +75,12 @@ class _FoodWaterLogState extends State<FoodWaterLog> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.account_circle, color: Colors.white), 
+            icon: const Icon(Icons.account_circle, color: Colors.white),
             onPressed: () {
-              Navigator.pushReplacementNamed(context, '/profile'); // Go to profile page
+              Navigator.pushReplacementNamed(
+                context,
+                '/profile',
+              ); // Go to profile page
             },
           ),
         ],
@@ -167,7 +167,7 @@ class _FoodWaterLogState extends State<FoodWaterLog> {
             Navigator.pushReplacementNamed(context, '/map');
           } else if (index == 1) {
             Navigator.pushReplacementNamed(context, '/dashboard');
-          } else if (index == 4 ) {
+          } else if (index == 4) {
             Navigator.pushReplacementNamed(context, '/mental');
           } else {
             _onItemTapped(index);
@@ -175,10 +175,16 @@ class _FoodWaterLogState extends State<FoodWaterLog> {
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard),
+            label: 'Dashboard',
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: 'Add'),
           BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
-          BottomNavigationBarItem(icon: Icon(Icons.self_improvement), label: 'Mental'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.self_improvement),
+            label: 'Mental',
+          ),
         ],
       ),
     );

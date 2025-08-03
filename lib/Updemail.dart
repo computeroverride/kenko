@@ -22,7 +22,10 @@ class _UpdateEmailState extends State<UpdateEmail> {
     final password = _passwordController.text.trim();
 
     // Validate inputs
-    if (currentEmail.isEmpty || newEmail.isEmpty || confirmEmail.isEmpty || password.isEmpty) {
+    if (currentEmail.isEmpty ||
+        newEmail.isEmpty ||
+        confirmEmail.isEmpty ||
+        password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please fill in all fields.")),
       );
@@ -31,7 +34,9 @@ class _UpdateEmailState extends State<UpdateEmail> {
 
     if (newEmail != confirmEmail) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("New email and confirmation do not match.")),
+        const SnackBar(
+          content: Text("New email and confirmation do not match."),
+        ),
       );
       return;
     }
@@ -84,7 +89,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
             fontSize: 24,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
-            color: Colors.white
+            color: Colors.white,
           ),
         ),
         centerTitle: true,
@@ -95,19 +100,28 @@ class _UpdateEmailState extends State<UpdateEmail> {
           children: [
             TextField(
               controller: _currentEmailController,
-              decoration: const InputDecoration(labelText: 'Current Email Address', border: InputBorder.none,),
+              decoration: const InputDecoration(
+                labelText: 'Current Email Address',
+                border: InputBorder.none,
+              ),
             ),
             const Divider(thickness: 1),
             const SizedBox(height: 20),
             TextField(
               controller: _newEmailController,
-              decoration: const InputDecoration(labelText: 'New Email Address', border: InputBorder.none,),
+              decoration: const InputDecoration(
+                labelText: 'New Email Address',
+                border: InputBorder.none,
+              ),
             ),
             const Divider(thickness: 1),
             const SizedBox(height: 20),
             TextField(
               controller: _confirmEmailController,
-              decoration: const InputDecoration(labelText: 'Confirm new Email Address', border: InputBorder.none,),
+              decoration: const InputDecoration(
+                labelText: 'Confirm new Email Address',
+                border: InputBorder.none,
+              ),
             ),
             const Divider(thickness: 1),
             const SizedBox(height: 20),
@@ -115,7 +129,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
               controller: _passwordController,
               obscureText: _obscurePassword,
               decoration: InputDecoration(
-                labelText: 'Current Password', 
+                labelText: 'Current Password',
                 border: InputBorder.none,
                 suffixIcon: IconButton(
                   icon: Icon(
@@ -136,20 +150,22 @@ class _UpdateEmailState extends State<UpdateEmail> {
               height: 50,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromRGBO(70, 34, 85, 1),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
+                  backgroundColor: const Color.fromRGBO(70, 34, 85, 1),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
                 onPressed: _updateEmail,
-                child: const Text('CONTINUE',
+                child: const Text(
+                  'CONTINUE',
                   style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1,
-                        color: Colors.white,)
-                  )
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
             ),
-            )
           ],
         ),
       ),

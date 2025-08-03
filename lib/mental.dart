@@ -181,9 +181,12 @@ class _MentalPageState extends State<MentalPage> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.account_circle, color: Colors.white), 
+            icon: const Icon(Icons.account_circle, color: Colors.white),
             onPressed: () {
-              Navigator.pushReplacementNamed(context, '/profile'); // Go to profile page
+              Navigator.pushReplacementNamed(
+                context,
+                '/profile',
+              ); // Go to profile page
             },
           ),
         ],
@@ -201,7 +204,10 @@ class _MentalPageState extends State<MentalPage> {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.favorite_border, color: Color.fromRGBO(24, 2, 12, 1)),
+                    const Icon(
+                      Icons.favorite_border,
+                      color: Color.fromRGBO(24, 2, 12, 1),
+                    ),
                     const SizedBox(width: 8),
                     Text(
                       "$_likeCount/$_maxLikes",
@@ -213,9 +219,14 @@ class _MentalPageState extends State<MentalPage> {
                         borderRadius: BorderRadius.circular(20),
                         child: LinearProgressIndicator(
                           value: progress,
-                          backgroundColor: const Color.fromRGBO(187, 203, 203, 1),
+                          backgroundColor: const Color.fromRGBO(
+                            187,
+                            203,
+                            203,
+                            1,
+                          ),
                           valueColor: const AlwaysStoppedAnimation<Color>(
-                             Color.fromRGBO(99, 75, 102, 1),
+                            Color.fromRGBO(99, 75, 102, 1),
                           ),
                           minHeight: 8,
                         ),
