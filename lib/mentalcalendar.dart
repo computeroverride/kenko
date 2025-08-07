@@ -201,6 +201,11 @@ class _LogMoodPageState extends State<LogMoodPage> {
               });
               _selectMood(selected);
             },
+            
+            availableCalendarFormats: const {CalendarFormat.month: 'Month'},
+
+            
+            headerStyle: const HeaderStyle(formatButtonVisible: false),
             calendarBuilders: CalendarBuilders(
               defaultBuilder: (context, day, _) {
                 final color = getMoodColor(day);
