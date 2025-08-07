@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
 import 'logadd.dart';
+
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
 
@@ -31,23 +32,25 @@ class _DashboardState extends State<Dashboard> {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    final snapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .collection('weight_logs')
-        .orderBy('timestamp')
-        .get();
+    final snapshot =
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .collection('weight_logs')
+            .orderBy('timestamp')
+            .get();
 
     setState(() {
-      _weightData = snapshot.docs.map((doc) {
-        final data = doc.data();
-        final timestamp = data['timestamp'] as Timestamp;
-        return {
-          'date': timestamp.toDate(),
-          'weight': (data['weight'] as num).toDouble(),
-          'x': timestamp.millisecondsSinceEpoch.toDouble(),
-        };
-      }).toList();
+      _weightData =
+          snapshot.docs.map((doc) {
+            final data = doc.data();
+            final timestamp = data['timestamp'] as Timestamp;
+            return {
+              'date': timestamp.toDate(),
+              'weight': (data['weight'] as num).toDouble(),
+              'x': timestamp.millisecondsSinceEpoch.toDouble(),
+            };
+          }).toList();
     });
   }
 
@@ -97,19 +100,32 @@ class _DashboardState extends State<Dashboard> {
                     LineChartData(
                       minX: _weightData.first['x'],
                       maxX: _weightData.last['x'],
-                      minY: _weightData.map((e) => e['weight'] as double).reduce(min) - 5,
-                      maxY: _weightData.map((e) => e['weight'] as double).reduce(max) + 5,
+                      minY:
+                          _weightData
+                              .map((e) => e['weight'] as double)
+                              .reduce(min) -
+                          5,
+                      maxY:
+                          _weightData
+                              .map((e) => e['weight'] as double)
+                              .reduce(max) +
+                          5,
                       gridData: FlGridData(show: true),
                       titlesData: FlTitlesData(
                         bottomTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
                             reservedSize: 32,
-                            interval: (_weightData.length > 1)
-                                ? (_weightData.last['x'] - _weightData.first['x']) / 7 // More frequent labels
-                                : 1,
+                            interval:
+                                (_weightData.length > 1)
+                                    ? (_weightData.last['x'] -
+                                            _weightData.first['x']) /
+                                        7 // More frequent labels
+                                    : 1,
                             getTitlesWidget: (value, meta) {
-                              final date = DateTime.fromMillisecondsSinceEpoch(value.toInt());
+                              final date = DateTime.fromMillisecondsSinceEpoch(
+                                value.toInt(),
+                              );
                               return Text(
                                 DateFormat('MM/dd').format(date),
                                 style: const TextStyle(fontSize: 10),
@@ -139,9 +155,12 @@ class _DashboardState extends State<Dashboard> {
                       borderData: FlBorderData(show: true),
                       lineBarsData: [
                         LineChartBarData(
-                          spots: _weightData
-                              .map((data) => FlSpot(data['x'], data['weight']))
-                              .toList(),
+                          spots:
+                              _weightData
+                                  .map(
+                                    (data) => FlSpot(data['x'], data['weight']),
+                                  )
+                                  .toList(),
                           isCurved: true,
                           color: Colors.blue,
                           barWidth: 3,
@@ -173,11 +192,11 @@ class _DashboardState extends State<Dashboard> {
             case 1:
               break;
             case 2:
-               showModalBottomSheet(
-          context: context,
-          backgroundColor: Colors.white,
-          builder: (context) => LogAdd(),
-        );
+              showModalBottomSheet(
+                context: context,
+                backgroundColor: Colors.white,
+                builder: (context) => LogAdd(),
+              );
               break;
             case 3:
               Navigator.pushReplacementNamed(context, '/map');
@@ -189,10 +208,16 @@ class _DashboardState extends State<Dashboard> {
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard),
+            label: 'Dashboard',
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: 'Add'),
           BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
-          BottomNavigationBarItem(icon: Icon(Icons.self_improvement), label: 'Mental'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.self_improvement),
+            label: 'Mental',
+          ),
         ],
       ),
     );

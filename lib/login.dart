@@ -17,8 +17,10 @@ class _LoginState extends State<Login> {
 
   // Function to handle login logic using Firebase Authentication
   Future<void> _login() async {
-    final email = _usernameController.text.trim(); // Get email input and trim spaces
-    final password = _passwordController.text.trim(); // Get password input and trim spaces
+    final email =
+        _usernameController.text.trim(); // Get email input and trim spaces
+    final password =
+        _passwordController.text.trim(); // Get password input and trim spaces
 
     // If either field is empty, show a snackbar and return early
     if (email.isEmpty || password.isEmpty) {
@@ -39,16 +41,16 @@ class _LoginState extends State<Login> {
       Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
       // Show Firebase error message if login fails
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message ?? "Login failed.")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.message ?? "Login failed.")));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(99, 75, 102, 1), 
+      backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
       // --- Body content ---
       body: Column(
         children: [
@@ -59,14 +61,14 @@ class _LoginState extends State<Login> {
                 "KENKO",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 48, 
+                  fontSize: 48,
                   fontWeight: FontWeight.w200,
                   letterSpacing: 1.2,
                 ),
               ),
             ),
           ),
-          
+
           Expanded(
             child: Container(
               width: double.infinity,
@@ -87,7 +89,7 @@ class _LoginState extends State<Login> {
                       Text(
                         "Welcome!",
                         style: TextStyle(
-                          fontSize: 28, 
+                          fontSize: 28,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1,
                         ),
@@ -96,23 +98,27 @@ class _LoginState extends State<Login> {
                       const SizedBox(height: 20),
                       // --- Username TextField ---
                       TextField(
-                        controller: _usernameController, // Binds input to controller
+                        controller:
+                            _usernameController, // Binds input to controller
                         textAlign: TextAlign.left,
                         decoration: const InputDecoration(
                           labelText: "Enter Email", // Placeholder text
                           hintStyle: TextStyle(color: Colors.grey),
                           border: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey), // Line under textfield
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                            ), // Line under textfield
                           ),
                         ),
                       ),
                       const SizedBox(height: 20),
                       // --- Password TextField ---
                       TextField(
-                        controller: _passwordController, 
-                        
+                        controller: _passwordController,
+
                         textAlign: TextAlign.left,
-                        obscureText: _obscurePassword, // Controls password visibility
+                        obscureText:
+                            _obscurePassword, // Controls password visibility
                         decoration: InputDecoration(
                           labelText: "Password",
                           hintStyle: const TextStyle(color: Colors.grey),
@@ -122,7 +128,8 @@ class _LoginState extends State<Login> {
                           suffixIcon: IconButton(
                             icon: Icon(
                               _obscurePassword
-                                  ? Icons.visibility_off // Eye with slash (hidden)
+                                  ? Icons
+                                      .visibility_off // Eye with slash (hidden)
                                   : Icons.visibility, // Eye open (visible)
                               color: Colors.grey,
                             ),
@@ -135,7 +142,7 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                       ),
-                      
+
                       const SizedBox(height: 40),
 
                       // --- Login Button ---
@@ -145,9 +152,16 @@ class _LoginState extends State<Login> {
                           width: double.infinity, // Full-width button
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color.fromRGBO(70, 34, 85, 1),
+                              backgroundColor: const Color.fromRGBO(
+                                70,
+                                34,
+                                85,
+                                1,
+                              ),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50.0), // Rounded edges
+                                borderRadius: BorderRadius.circular(
+                                  50.0,
+                                ), // Rounded edges
                               ),
                             ),
                             onPressed: _login, // Calls the login handler
@@ -160,9 +174,9 @@ class _LoginState extends State<Login> {
                                 letterSpacing: 1,
                               ),
                             ),
-                            ),
                           ),
                         ),
+                      ),
                       const SizedBox(height: 20),
                       // --- Signup link ---
                       Center(

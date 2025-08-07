@@ -74,7 +74,10 @@ class _HomeState extends State<Home> {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       DocumentSnapshot doc =
-          await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
       if (doc.exists && doc.data() != null) {
         setState(() {
           _username = doc.get('username') ?? "User";
@@ -87,7 +90,11 @@ class _HomeState extends State<Home> {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+    final doc =
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
     if (doc.exists) {
       final data = doc.data()!;
       final weight = data['weight'] as double;
@@ -96,9 +103,10 @@ class _HomeState extends State<Home> {
       final gender = data['gender'] as String;
 
       // Mifflin-St Jeor Equation for BMR
-      double bmr = (gender == 'Male')
-          ? (10 * weight) + (6.25 * height) - (5 * age) + 5
-          : (10 * weight) + (6.25 * height) - (5 * age) - 161;
+      double bmr =
+          (gender == 'Male')
+              ? (10 * weight) + (6.25 * height) - (5 * age) + 5
+              : (10 * weight) + (6.25 * height) - (5 * age) - 161;
       // Adjust for weight loss (20% deficit)
       dailyCalorieGoal = bmr * 0.8;
       setState(() {});
@@ -109,25 +117,27 @@ class _HomeState extends State<Home> {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    final snapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .collection('food_logs')
-        .orderBy('timestamp', descending: true)
-        .get();
+    final snapshot =
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .collection('food_logs')
+            .orderBy('timestamp', descending: true)
+            .get();
 
     setState(() {
       consumedCalories = 0; // Reset before recalculating
-      foodLogs = snapshot.docs.map((doc) {
-        final data = doc.data();
-        consumedCalories += (data['calories'] as num).toDouble();
-        return {
-          'id': doc.id,
-          'foodName': data['foodName'],
-          'calories': (data['calories'] as num).toDouble(),
-          'timestamp': (data['timestamp'] as Timestamp).toDate(),
-        };
-      }).toList();
+      foodLogs =
+          snapshot.docs.map((doc) {
+            final data = doc.data();
+            consumedCalories += (data['calories'] as num).toDouble();
+            return {
+              'id': doc.id,
+              'foodName': data['foodName'],
+              'calories': (data['calories'] as num).toDouble(),
+              'timestamp': (data['timestamp'] as Timestamp).toDate(),
+            };
+          }).toList();
     });
   }
 
@@ -135,25 +145,27 @@ class _HomeState extends State<Home> {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    final snapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .collection('water_logs')
-        .orderBy('timestamp', descending: true)
-        .get();
+    final snapshot =
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .collection('water_logs')
+            .orderBy('timestamp', descending: true)
+            .get();
 
     setState(() {
       totalGlasses = 0; // Reset before recalculating
-      waterLogs = snapshot.docs.map((doc) {
-        final data = doc.data();
-        final glasses = (data['glasses'] as num).toInt(); // Cast num to int
-        totalGlasses += glasses;
-        return {
-          'id': doc.id,
-          'glasses': glasses,
-          'timestamp': (data['timestamp'] as Timestamp).toDate(),
-        };
-      }).toList();
+      waterLogs =
+          snapshot.docs.map((doc) {
+            final data = doc.data();
+            final glasses = (data['glasses'] as num).toInt(); // Cast num to int
+            totalGlasses += glasses;
+            return {
+              'id': doc.id,
+              'glasses': glasses,
+              'timestamp': (data['timestamp'] as Timestamp).toDate(),
+            };
+          }).toList();
     });
   }
 
@@ -161,27 +173,29 @@ class _HomeState extends State<Home> {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    final snapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .collection('activity_logs')
-        .orderBy('timestamp', descending: true)
-        .get();
+    final snapshot =
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .collection('activity_logs')
+            .orderBy('timestamp', descending: true)
+            .get();
 
     setState(() {
       activityCalories = 0; // Reset before recalculating
-      activityLogs = snapshot.docs.map((doc) {
-        final data = doc.data();
-        activityCalories += (data['calories'] as num).toDouble();
-        return {
-          'id': doc.id,
-          'activityName': data['activityName'],
-          'reps': (data['reps'] as num).toInt(),
-          'minutes': (data['minutes'] as num).toInt(),
-          'calories': (data['calories'] as num).toDouble(),
-          'timestamp': (data['timestamp'] as Timestamp).toDate(),
-        };
-      }).toList();
+      activityLogs =
+          snapshot.docs.map((doc) {
+            final data = doc.data();
+            activityCalories += (data['calories'] as num).toDouble();
+            return {
+              'id': doc.id,
+              'activityName': data['activityName'],
+              'reps': (data['reps'] as num).toInt(),
+              'minutes': (data['minutes'] as num).toInt(),
+              'calories': (data['calories'] as num).toDouble(),
+              'timestamp': (data['timestamp'] as Timestamp).toDate(),
+            };
+          }).toList();
     });
   }
 
@@ -228,7 +242,11 @@ class _HomeState extends State<Home> {
     _fetchActivityLogs(); // Refresh logs
   }
 
-  Future<void> _editFoodLog(String id, String newFoodName, double newCalories) async {
+  Future<void> _editFoodLog(
+    String id,
+    String newFoodName,
+    double newCalories,
+  ) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
@@ -240,10 +258,10 @@ class _HomeState extends State<Home> {
         .collection('food_logs')
         .doc(id)
         .update({
-      'foodName': newFoodName,
-      'calories': newCalories,
-      'timestamp': FieldValue.serverTimestamp(),
-    });
+          'foodName': newFoodName,
+          'calories': newCalories,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
     _fetchFoodLogs(); // Refresh logs
   }
 
@@ -259,13 +277,19 @@ class _HomeState extends State<Home> {
         .collection('water_logs')
         .doc(id)
         .update({
-      'glasses': newGlasses,
-      'timestamp': FieldValue.serverTimestamp(),
-    });
+          'glasses': newGlasses,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
     _fetchWaterLogs(); // Refresh logs
   }
 
-  Future<void> _editActivityLog(String id, String newActivityName, int newReps, int newMinutes, double newCalories) async {
+  Future<void> _editActivityLog(
+    String id,
+    String newActivityName,
+    int newReps,
+    int newMinutes,
+    double newCalories,
+  ) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
@@ -277,141 +301,164 @@ class _HomeState extends State<Home> {
         .collection('activity_logs')
         .doc(id)
         .update({
-      'activityName': newActivityName,
-      'reps': newReps,
-      'minutes': newMinutes,
-      'calories': newCalories,
-      'timestamp': FieldValue.serverTimestamp(),
-    });
+          'activityName': newActivityName,
+          'reps': newReps,
+          'minutes': newMinutes,
+          'calories': newCalories,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
     _fetchActivityLogs(); // Refresh logs
   }
 
-  void _showEditFoodDialog(BuildContext context, String id, String foodName, double calories) {
-    final _foodController = TextEditingController(text: foodName);
-    final _calorieController = TextEditingController(text: calories.toString());
+  void _showEditFoodDialog(
+    BuildContext context,
+    String id,
+    String foodName,
+    double calories,
+  ) {
+    final foodController = TextEditingController(text: foodName);
+    final calorieController = TextEditingController(text: calories.toString());
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Edit Food Entry'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: _foodController,
-              decoration: InputDecoration(labelText: 'Food Name'),
+      builder:
+          (context) => AlertDialog(
+            title: Text('Edit Food Entry'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: foodController,
+                  decoration: InputDecoration(labelText: 'Food Name'),
+                ),
+                TextField(
+                  controller: calorieController,
+                  decoration: InputDecoration(labelText: 'Calories'),
+                  keyboardType: TextInputType.number,
+                ),
+              ],
             ),
-            TextField(
-              controller: _calorieController,
-              decoration: InputDecoration(labelText: 'Calories'),
-              keyboardType: TextInputType.number,
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  final newCalories =
+                      double.tryParse(calorieController.text) ?? 0.0;
+                  _editFoodLog(id, foodController.text, newCalories);
+                  Navigator.pop(context);
+                },
+                child: Text('Save'),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () {
-              final newCalories = double.tryParse(_calorieController.text) ?? 0.0;
-              _editFoodLog(id, _foodController.text, newCalories);
-              Navigator.pop(context);
-            },
-            child: Text('Save'),
-          ),
-        ],
-      ),
     );
   }
 
   void _showEditWaterDialog(BuildContext context, String id, int glasses) {
-    final _glassesController = TextEditingController(text: glasses.toString());
+    final glassesController = TextEditingController(text: glasses.toString());
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Edit Water Entry'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: _glassesController,
-              decoration: InputDecoration(labelText: 'Glasses'),
-              keyboardType: TextInputType.number,
+      builder:
+          (context) => AlertDialog(
+            title: Text('Edit Water Entry'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: glassesController,
+                  decoration: InputDecoration(labelText: 'Glasses'),
+                  keyboardType: TextInputType.number,
+                ),
+              ],
             ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  final newGlasses = int.tryParse(glassesController.text) ?? 0;
+                  _editWaterLog(id, newGlasses);
+                  Navigator.pop(context);
+                },
+                child: Text('Save'),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () {
-              final newGlasses = int.tryParse(_glassesController.text) ?? 0;
-              _editWaterLog(id, newGlasses);
-              Navigator.pop(context);
-            },
-            child: Text('Save'),
-          ),
-        ],
-      ),
     );
   }
 
-  void _showEditActivityDialog(BuildContext context, String id, String activityName, int reps, int minutes, double calories) {
-    final _activityController = TextEditingController(text: activityName);
-    final _repsController = TextEditingController(text: reps.toString());
-    final _minutesController = TextEditingController(text: minutes.toString());
-    final _calorieController = TextEditingController(text: calories.toString());
+  void _showEditActivityDialog(
+    BuildContext context,
+    String id,
+    String activityName,
+    int reps,
+    int minutes,
+    double calories,
+  ) {
+    final activityController = TextEditingController(text: activityName);
+    final repsController = TextEditingController(text: reps.toString());
+    final minutesController = TextEditingController(text: minutes.toString());
+    final calorieController = TextEditingController(text: calories.toString());
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Edit Activity Entry'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: _activityController,
-              decoration: InputDecoration(labelText: 'Activity Name'),
+      builder:
+          (context) => AlertDialog(
+            title: Text('Edit Activity Entry'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: activityController,
+                  decoration: InputDecoration(labelText: 'Activity Name'),
+                ),
+                TextField(
+                  controller: repsController,
+                  decoration: InputDecoration(labelText: 'Reps'),
+                  keyboardType: TextInputType.number,
+                ),
+                TextField(
+                  controller: minutesController,
+                  decoration: InputDecoration(labelText: 'Minutes'),
+                  keyboardType: TextInputType.number,
+                ),
+                TextField(
+                  controller: calorieController,
+                  decoration: InputDecoration(labelText: 'Calories'),
+                  keyboardType: TextInputType.number,
+                ),
+              ],
             ),
-            TextField(
-              controller: _repsController,
-              decoration: InputDecoration(labelText: 'Reps'),
-              keyboardType: TextInputType.number,
-            ),
-            TextField(
-              controller: _minutesController,
-              decoration: InputDecoration(labelText: 'Minutes'),
-              keyboardType: TextInputType.number,
-            ),
-            TextField(
-              controller: _calorieController,
-              decoration: InputDecoration(labelText: 'Calories'),
-              keyboardType: TextInputType.number,
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  final newReps = int.tryParse(repsController.text) ?? 0;
+                  final newMinutes = int.tryParse(minutesController.text) ?? 0;
+                  final newCalories =
+                      double.tryParse(calorieController.text) ?? 0.0;
+                  _editActivityLog(
+                    id,
+                    activityController.text,
+                    newReps,
+                    newMinutes,
+                    newCalories,
+                  );
+                  Navigator.pop(context);
+                },
+                child: Text('Save'),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () {
-              final newReps = int.tryParse(_repsController.text) ?? 0;
-              final newMinutes = int.tryParse(_minutesController.text) ?? 0;
-              final newCalories = double.tryParse(_calorieController.text) ?? 0.0;
-              _editActivityLog(id, _activityController.text, newReps, newMinutes, newCalories);
-              Navigator.pop(context);
-            },
-            child: Text('Save'),
-          ),
-        ],
-      ),
     );
   }
 
@@ -477,52 +524,60 @@ class _HomeState extends State<Home> {
     if (user == null) return;
 
     // Show confirmation dialog
-    bool confirm = await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Colors.white,
-        title: Text('Start New Day'),
-        content: Text('Are you sure you want to reset today\'s data? This will clear all food, water, and step records for the current day.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text('Confirm'),
-          ),
-        ],
-      ),
-    ) ?? false;
+    bool confirm =
+        await showDialog(
+          context: context,
+          builder:
+              (context) => AlertDialog(
+                backgroundColor: Colors.white,
+                title: Text('Start New Day'),
+                content: Text(
+                  'Are you sure you want to reset today\'s data? This will clear all food, water, and step records for the current day.',
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    child: Text('Confirm'),
+                  ),
+                ],
+              ),
+        ) ??
+        false;
 
     if (confirm) {
       // Delete all food logs for the day
-      final foodSnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .collection('food_logs')
-          .get();
+      final foodSnapshot =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .collection('food_logs')
+              .get();
       for (var doc in foodSnapshot.docs) {
         await doc.reference.delete();
       }
 
       // Delete all water logs for the day
-      final waterSnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .collection('water_logs')
-          .get();
+      final waterSnapshot =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .collection('water_logs')
+              .get();
       for (var doc in waterSnapshot.docs) {
         await doc.reference.delete();
       }
 
       // Delete all activity logs for the day
-      final activitySnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .collection('activity_logs')
-          .get();
+      final activitySnapshot =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .collection('activity_logs')
+              .get();
       for (var doc in activitySnapshot.docs) {
         await doc.reference.delete();
       }
@@ -579,9 +634,12 @@ class _HomeState extends State<Home> {
               Center(
                 child: Text(
                   "Welcome, $_username!",
-                  style: const TextStyle(fontSize: 20, color: Color.fromARGB(255, 8, 5, 5)),
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Color.fromARGB(255, 8, 5, 5),
+                  ),
                 ),
-              ), 
+              ),
               const SizedBox(height: 20),
               // Step tracking section
               Container(
@@ -608,9 +666,7 @@ class _HomeState extends State<Home> {
               ),
               TextButton(
                 onPressed: _fetchStepData,
-                child: Center(
-                  child: Text("Refresh Step Data"),
-                ),
+                child: Center(child: Text("Refresh Step Data")),
               ),
               const SizedBox(height: 20),
               // Calorie and Water Trackers
@@ -622,10 +678,13 @@ class _HomeState extends State<Home> {
                       children: [
                         Text(
                           "Calories: $consumedCalories kcal",
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         SizedBox(height: 10),
-                        Container(
+                        SizedBox(
                           height: 200,
                           child: DoughnutChart(
                             title: "Calories",
@@ -637,25 +696,27 @@ class _HomeState extends State<Home> {
                       ],
                     ),
                   const SizedBox(height: 20),
-                  if (waterGoal != null)
-                    Column(
-                      children: [
-                        Text(
-                          "Water: $totalGlasses glasses",
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  Column(
+                    children: [
+                      Text(
+                        "Water: $totalGlasses glasses",
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
-                        SizedBox(height: 10),
-                        Container(
-                          height: 200,
-                          child: DoughnutChart(
-                            title: "Water",
-                            goal: waterGoal.toDouble(),
-                            consumed: totalGlasses.toDouble(),
-                            color: Colors.blue,
-                          ),
+                      ),
+                      SizedBox(height: 10),
+                      Container(
+                        height: 200,
+                        child: DoughnutChart(
+                          title: "Water",
+                          goal: waterGoal.toDouble(),
+                          consumed: totalGlasses.toDouble(),
+                          color: Colors.blue,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
               const SizedBox(height: 20),
@@ -672,13 +733,21 @@ class _HomeState extends State<Home> {
                   final log = foodLogs[index];
                   return ListTile(
                     title: Text(log['foodName']),
-                    subtitle: Text('${log['calories']} kcal - ${DateFormat('MM/dd HH:mm').format(log['timestamp'])}'),
+                    subtitle: Text(
+                      '${log['calories']} kcal - ${DateFormat('MM/dd HH:mm').format(log['timestamp'])}',
+                    ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
                           icon: Icon(Icons.edit),
-                          onPressed: () => _showEditFoodDialog(context, log['id'], log['foodName'], log['calories']),
+                          onPressed:
+                              () => _showEditFoodDialog(
+                                context,
+                                log['id'],
+                                log['foodName'],
+                                log['calories'],
+                              ),
                         ),
                         IconButton(
                           icon: Icon(Icons.delete),
@@ -703,13 +772,20 @@ class _HomeState extends State<Home> {
                   final log = waterLogs[index];
                   return ListTile(
                     title: Text('${log['glasses']} glass(es)'),
-                    subtitle: Text('${DateFormat('MM/dd HH:mm').format(log['timestamp'])}'),
+                    subtitle: Text(
+                      DateFormat('MM/dd HH:mm').format(log['timestamp']),
+                    ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
                           icon: Icon(Icons.edit),
-                          onPressed: () => _showEditWaterDialog(context, log['id'], log['glasses']),
+                          onPressed:
+                              () => _showEditWaterDialog(
+                                context,
+                                log['id'],
+                                log['glasses'],
+                              ),
                         ),
                         IconButton(
                           icon: Icon(Icons.delete),
@@ -734,13 +810,23 @@ class _HomeState extends State<Home> {
                   final log = activityLogs[index];
                   return ListTile(
                     title: Text(log['activityName']),
-                    subtitle: Text('${log['reps']} reps, ${log['minutes']} min - ${log['calories']} kcal - ${DateFormat('MM/dd HH:mm').format(log['timestamp'])}'),
+                    subtitle: Text(
+                      '${log['reps']} reps, ${log['minutes']} min - ${log['calories']} kcal - ${DateFormat('MM/dd HH:mm').format(log['timestamp'])}',
+                    ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
                           icon: Icon(Icons.edit),
-                          onPressed: () => _showEditActivityDialog(context, log['id'], log['activityName'], log['reps'], log['minutes'], log['calories']),
+                          onPressed:
+                              () => _showEditActivityDialog(
+                                context,
+                                log['id'],
+                                log['activityName'],
+                                log['reps'],
+                                log['minutes'],
+                                log['calories'],
+                              ),
                         ),
                         IconButton(
                           icon: Icon(Icons.delete),
@@ -758,24 +844,26 @@ class _HomeState extends State<Home> {
                   height: 40,
                   width: double.infinity,
                   child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromRGBO(70, 34, 85, 1),
-                    shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50.0), // Rounded edges
-                          ),
-                  ),
-                  onPressed: _startNewDay,
-                  child: const Text(
-                    'NEW DAY',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromRGBO(70, 34, 85, 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          50.0,
+                        ), // Rounded edges
+                      ),
+                    ),
+                    onPressed: _startNewDay,
+                    child: const Text(
+                      'NEW DAY',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
+                      ),
+                    ),
                   ),
                 ),
-                )
-                
               ),
             ],
           ),
@@ -807,10 +895,16 @@ class _HomeState extends State<Home> {
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard),
+            label: 'Dashboard',
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: 'Add'),
           BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
-          BottomNavigationBarItem(icon: Icon(Icons.self_improvement), label: 'Mental'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.self_improvement),
+            label: 'Mental',
+          ),
         ],
       ),
     );
@@ -823,14 +917,23 @@ class DoughnutChart extends StatelessWidget {
   final double consumed;
   final Color color;
 
-  DoughnutChart({required this.title, required this.goal, required this.consumed, required this.color});
+  const DoughnutChart({
+    super.key,
+    required this.title,
+    required this.goal,
+    required this.consumed,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
     final remaining = goal - consumed;
     return Column(
       children: [
-        Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        Text(
+          title,
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
         SizedBox(
           height: 150,
           child: PieChart(
@@ -843,14 +946,22 @@ class DoughnutChart extends StatelessWidget {
                   value: consumed,
                   title: '$consumed',
                   radius: 60,
-                  titleStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
+                  titleStyle: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
                 PieChartSectionData(
                   color: color.withOpacity(0.3),
                   value: remaining > 0 ? remaining : 0,
-                  title: remaining > 0 ? '${remaining.toStringAsFixed(0)}' : '0',
+                  title: remaining > 0 ? remaining.toStringAsFixed(0) : '0',
                   radius: 60,
-                  titleStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
+                  titleStyle: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ],
             ),

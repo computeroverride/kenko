@@ -48,49 +48,57 @@ class _LogMoodPageState extends State<LogMoodPage> {
 
   void _selectMood(DateTime day) {
     final formattedDay = DateTime(day.year, day.month, day.day);
-    final dateKey = "${formattedDay.year}-${formattedDay.month}-${formattedDay.day}";
+    final dateKey =
+        "${formattedDay.year}-${formattedDay.month}-${formattedDay.day}";
 
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        backgroundColor: Colors.white,
-        title: const Text("Select Your Mood"),
-        content: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.sentiment_very_dissatisfied, color: Colors.blue),
-              onPressed: () async {
-                await _saveMoodToFirestore(dateKey, 'sad');
-                setState(() {
-                  moodLog[formattedDay] = 'sad';
-                });
-                Navigator.pop(context);
-              },
+      builder:
+          (_) => AlertDialog(
+            backgroundColor: Colors.white,
+            title: const Text("Select Your Mood"),
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.sentiment_very_dissatisfied,
+                    color: Colors.blue,
+                  ),
+                  onPressed: () async {
+                    await _saveMoodToFirestore(dateKey, 'sad');
+                    setState(() {
+                      moodLog[formattedDay] = 'sad';
+                    });
+                    Navigator.pop(context);
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.sentiment_neutral, color: Colors.grey),
+                  onPressed: () async {
+                    await _saveMoodToFirestore(dateKey, 'neutral');
+                    setState(() {
+                      moodLog[formattedDay] = 'neutral';
+                    });
+                    Navigator.pop(context);
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.sentiment_very_satisfied,
+                    color: Colors.yellow,
+                  ),
+                  onPressed: () async {
+                    await _saveMoodToFirestore(dateKey, 'happy');
+                    setState(() {
+                      moodLog[formattedDay] = 'happy';
+                    });
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
             ),
-            IconButton(
-              icon: const Icon(Icons.sentiment_neutral, color: Colors.grey),
-              onPressed: () async {
-                await _saveMoodToFirestore(dateKey, 'neutral');
-                setState(() {
-                  moodLog[formattedDay] = 'neutral';
-                });
-                Navigator.pop(context);
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.sentiment_very_satisfied, color: Colors.yellow),
-              onPressed: () async {
-                await _saveMoodToFirestore(dateKey, 'happy');
-                setState(() {
-                  moodLog[formattedDay] = 'happy';
-                });
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      ),
+          ),
     );
   }
 
@@ -108,14 +116,11 @@ class _LogMoodPageState extends State<LogMoodPage> {
           .doc(user.uid)
           .collection('moods')
           .doc(dateKey)
-          .set({
-        'mood': mood,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
+          .set({'mood': mood, 'timestamp': FieldValue.serverTimestamp()});
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error saving mood: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error saving mood: $e')));
     }
   }
 
@@ -128,11 +133,12 @@ class _LogMoodPageState extends State<LogMoodPage> {
       return;
     }
     try {
-      final snapshot = await _firestore
-          .collection('users')
-          .doc(user.uid)
-          .collection('moods')
-          .get();
+      final snapshot =
+          await _firestore
+              .collection('users')
+              .doc(user.uid)
+              .collection('moods')
+              .get();
 
       setState(() {
         moodLog.clear();
@@ -146,9 +152,9 @@ class _LogMoodPageState extends State<LogMoodPage> {
         }
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error loading moods: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error loading moods: $e')));
     }
   }
 
@@ -255,10 +261,16 @@ class _LogMoodPageState extends State<LogMoodPage> {
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard),label: 'Dashboard'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard),
+            label: 'Dashboard',
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: 'Add'),
           BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
-          BottomNavigationBarItem(icon: Icon(Icons.self_improvement),label: 'Mental'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.self_improvement),
+            label: 'Mental',
+          ),
         ],
       ),
     );
