@@ -722,7 +722,7 @@ class _HomeState extends State<Home> {
               ),
               const SizedBox(height: 20),
               const Text(
-                "Exercise Log",
+                "Activity Log",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),

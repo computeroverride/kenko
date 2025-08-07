@@ -8,7 +8,6 @@ import 'package:kenko/profile.dart';
 import 'package:kenko/signup.dart';
 import 'package:kenko/mental.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:kenko/workout.dart';
 import 'firebase_options.dart';
 import 'heightweight.dart';
 import 'dashboard.dart';
@@ -28,9 +27,8 @@ void main() async {
         '/activity': (context) => ActivityLog(),
         '/map': (context) => FreeMapScreen(),
         '/mental': (context) => MentalPage(),
-        '/workout': (context) => WorkoutLog(),
         '/heightweight': (context) => HeightWeight(),
-        '/dashboard': (context) => const Dashboard(),
+        '/dashboard': (context) => Dashboard(),
       },
     ),
   );
