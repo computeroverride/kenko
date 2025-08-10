@@ -17,24 +17,24 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _selectedIndex = 0; // Tracks currently selected bottom navigation index
-  String _username = "User"; // Added to store username
+  int _selectedIndex = 0; 
+  String _username = "User"; 
 
-  // Step tracking variables
+  
   final Health _health = Health();
   int _totalSteps = 0;
-  double _totalDistance = 0.0; // meters
+  double _totalDistance = 0.0; 
   Timer? _timer;
 
-  // Calorie tracking variables
+  
   double? dailyCalorieGoal;
-  double consumedCalories = 0; // Only food calories
-  double activityCalories = 0; // Calories burned from activity
+  double consumedCalories = 0; 
+  double activityCalories = 0; 
   List<Map<String, dynamic>> foodLogs = [];
   List<Map<String, dynamic>> activityLogs = [];
 
-  // Water tracking variables
-  final int waterGoal = 8; // Goal of 8 glasses
+  
+  final int waterGoal = 8; 
   int totalGlasses = 0;
   List<Map<String, dynamic>> waterLogs = [];
 
@@ -102,12 +102,12 @@ class _HomeState extends State<Home> {
       final age = data['age'] as int;
       final gender = data['gender'] as String;
 
-      // Mifflin-St Jeor Equation for BMR
+      
       double bmr =
           (gender == 'Male')
               ? (10 * weight) + (6.25 * height) - (5 * age) + 5
               : (10 * weight) + (6.25 * height) - (5 * age) - 161;
-      // Adjust for weight loss (20% deficit)
+      
       dailyCalorieGoal = bmr * 0.8;
       setState(() {});
     }
@@ -126,7 +126,7 @@ class _HomeState extends State<Home> {
             .get();
 
     setState(() {
-      consumedCalories = 0; // Reset before recalculating
+      consumedCalories = 0; 
       foodLogs =
           snapshot.docs.map((doc) {
             final data = doc.data();
@@ -154,11 +154,11 @@ class _HomeState extends State<Home> {
             .get();
 
     setState(() {
-      totalGlasses = 0; // Reset before recalculating
+      totalGlasses = 0; 
       waterLogs =
           snapshot.docs.map((doc) {
             final data = doc.data();
-            final glasses = (data['glasses'] as num).toInt(); // Cast num to int
+            final glasses = (data['glasses'] as num).toInt(); 
             totalGlasses += glasses;
             return {
               'id': doc.id,
@@ -182,7 +182,7 @@ class _HomeState extends State<Home> {
             .get();
 
     setState(() {
-      activityCalories = 0; // Reset before recalculating
+      activityCalories = 0; 
       activityLogs =
           snapshot.docs.map((doc) {
             final data = doc.data();
@@ -209,7 +209,7 @@ class _HomeState extends State<Home> {
         .collection('food_logs')
         .doc(id)
         .delete();
-    _fetchFoodLogs(); // Refresh logs
+    _fetchFoodLogs(); 
   }
 
   Future<void> _deleteWaterLog(String id) async {
@@ -224,7 +224,7 @@ class _HomeState extends State<Home> {
         .collection('water_logs')
         .doc(id)
         .delete();
-    _fetchWaterLogs(); // Refresh logs
+    _fetchWaterLogs(); 
   }
 
   Future<void> _deleteActivityLog(String id) async {
@@ -239,7 +239,7 @@ class _HomeState extends State<Home> {
         .collection('activity_logs')
         .doc(id)
         .delete();
-    _fetchActivityLogs(); // Refresh logs
+    _fetchActivityLogs(); 
   }
 
   Future<void> _editFoodLog(
@@ -262,7 +262,7 @@ class _HomeState extends State<Home> {
           'calories': newCalories,
           'timestamp': FieldValue.serverTimestamp(),
         });
-    _fetchFoodLogs(); // Refresh logs
+    _fetchFoodLogs();
   }
 
   Future<void> _editWaterLog(String id, int newGlasses) async {
@@ -280,7 +280,7 @@ class _HomeState extends State<Home> {
           'glasses': newGlasses,
           'timestamp': FieldValue.serverTimestamp(),
         });
-    _fetchWaterLogs(); // Refresh logs
+    _fetchWaterLogs(); 
   }
 
   Future<void> _editActivityLog(
@@ -307,7 +307,7 @@ class _HomeState extends State<Home> {
           'calories': newCalories,
           'timestamp': FieldValue.serverTimestamp(),
         });
-    _fetchActivityLogs(); // Refresh logs
+    _fetchActivityLogs(); 
   }
 
   void _showEditFoodDialog(
@@ -501,7 +501,7 @@ class _HomeState extends State<Home> {
     }
 
     if (totalDistance == 0.0 && steps != null && steps > 0) {
-      totalDistance = steps * 0.8; // Average step length approximation
+      totalDistance = steps * 0.8; 
       debugPrint("Estimated distance from steps: $totalDistance meters");
     }
 
@@ -523,7 +523,7 @@ class _HomeState extends State<Home> {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    // Show confirmation dialog
+    
     bool confirm =
         await showDialog(
           context: context,
@@ -549,7 +549,7 @@ class _HomeState extends State<Home> {
         false;
 
     if (confirm) {
-      // Delete all food logs for the day
+      
       final foodSnapshot =
           await FirebaseFirestore.instance
               .collection('users')
@@ -560,7 +560,7 @@ class _HomeState extends State<Home> {
         await doc.reference.delete();
       }
 
-      // Delete all water logs for the day
+      
       final waterSnapshot =
           await FirebaseFirestore.instance
               .collection('users')
@@ -571,7 +571,7 @@ class _HomeState extends State<Home> {
         await doc.reference.delete();
       }
 
-      // Delete all activity logs for the day
+      
       final activitySnapshot =
           await FirebaseFirestore.instance
               .collection('users')
@@ -582,7 +582,7 @@ class _HomeState extends State<Home> {
         await doc.reference.delete();
       }
 
-      // Reset local state
+      
       setState(() {
         consumedCalories = 0;
         activityCalories = 0;
@@ -594,7 +594,7 @@ class _HomeState extends State<Home> {
         _totalDistance = 0.0;
       });
 
-      // Refresh step data to start fresh
+      
       await _fetchStepData();
     }
   }
@@ -604,7 +604,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        automaticallyImplyLeading: false, // Remove the back arrow
+        automaticallyImplyLeading: false, 
         backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
         centerTitle: true,
         title: Text(
@@ -641,7 +641,7 @@ class _HomeState extends State<Home> {
                 ),
               ),
               const SizedBox(height: 20),
-              // Step tracking section
+              
               Container(
                 height: 50,
                 width: double.infinity,
@@ -669,7 +669,7 @@ class _HomeState extends State<Home> {
                 child: Center(child: Text("Refresh Step Data")),
               ),
               const SizedBox(height: 20),
-              // Calorie and Water Trackers
+             
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -838,7 +838,7 @@ class _HomeState extends State<Home> {
                 },
               ),
               const SizedBox(height: 20),
-              // New Day Button
+              
               Center(
                 child: SizedBox(
                   height: 40,

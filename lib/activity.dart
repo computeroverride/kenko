@@ -13,7 +13,7 @@ class ActivityLog extends StatefulWidget {
 class _ActivityLogState extends State<ActivityLog> {
   int _selectedIndex = 0;
 
-  // Controllers for activity input
+  
   final _activityNameController = TextEditingController();
   final _repsController = TextEditingController();
   final _minutesController = TextEditingController();
@@ -45,12 +45,12 @@ class _ActivityLogState extends State<ActivityLog> {
     _repsController.clear();
     _minutesController.clear();
     _caloriesController.clear();
-    Navigator.pushReplacementNamed(context, '/home'); // Return to Home
+    Navigator.pushReplacementNamed(context, '/home'); 
   }
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index; // Tracks which nav item is selected
+      _selectedIndex = index; 
     });
   }
 
@@ -64,7 +64,7 @@ class _ActivityLogState extends State<ActivityLog> {
         title: const Text(
           "ADD TO ACTIVITY LOG",
           style: TextStyle(
-            fontSize: 24,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
             color: Colors.white,
@@ -77,7 +77,7 @@ class _ActivityLogState extends State<ActivityLog> {
               Navigator.pushReplacementNamed(
                 context,
                 '/profile',
-              ); // Go to profile page
+              ); 
             },
           ),
         ],

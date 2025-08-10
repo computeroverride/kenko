@@ -25,7 +25,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _fetchWeightData(); // Refresh data when the page is revisited
+    _fetchWeightData(); 
   }
 
   Future<void> _fetchWeightData() async {
@@ -120,7 +120,7 @@ class _DashboardState extends State<Dashboard> {
                                 (_weightData.length > 1)
                                     ? (_weightData.last['x'] -
                                             _weightData.first['x']) /
-                                        7 // More frequent labels
+                                        7 
                                     : 1,
                             getTitlesWidget: (value, meta) {
                               final date = DateTime.fromMillisecondsSinceEpoch(
@@ -136,7 +136,7 @@ class _DashboardState extends State<Dashboard> {
                         leftTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
-                            interval: 2, // Smaller interval for weight
+                            interval: 2, 
                             getTitlesWidget: (value, meta) {
                               return Text(
                                 value.toStringAsFixed(1),

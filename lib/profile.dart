@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Updemail.dart';
-import 'upddetails.dart'; // Import the new UpdateDetails page
+import 'upddetails.dart'; 
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -12,12 +12,12 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  String _username = "User"; // Default username
+  String _username = "User"; 
 
   @override
   void initState() {
     super.initState();
-    _fetchUsername(); // Fetch username from Firestore
+    _fetchUsername(); 
   }
 
   Future<void> _fetchUsername() async {
@@ -35,7 +35,7 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  // Function to handle logout
+
   Future<void> _logout(BuildContext context) async {
     try {
       await FirebaseAuth.instance.signOut();
@@ -50,60 +50,59 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Page background color set to white
-      // --- Top App Bar ---
+      backgroundColor: Colors.white, 
+
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
-        centerTitle: true, // Centers the title text
+        centerTitle: true, 
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pushReplacementNamed(context, '/home'); // Navigate to Home page
+            Navigator.pushReplacementNamed(context, '/home'); 
           },
         ),
         title: Text(
-          "PROFILE", // Title displayed in app bar
+          "PROFILE", 
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
-            color: Colors.white// Dark greyish text color
+            color: Colors.white
           ),
         ),
       ),
 
-      // --- Main Body Content ---
       body: Column(
         children: [
-          const SizedBox(height: 30), // Top spacing
-          // --- Profile Avatar and Name ---
+          const SizedBox(height: 30), 
+       
           const CircleAvatar(
-            radius: 45, // Size of circular avatar
-            backgroundColor: Color.fromRGBO(24, 2, 12, 1), // Background of avatar circle
+            radius: 45, 
+            backgroundColor: Color.fromRGBO(24, 2, 12, 1), 
             child: Icon(
-              Icons.account_circle, // Profile icon inside avatar
+              Icons.account_circle,
               size: 50,
-              color: Colors.white, // Icon color
+              color: Colors.white, 
             ),
           ),
           const SizedBox(height: 12),
           Text(
-            "Hello, $_username!", // Updated to display username
+            "Hello, $_username!",
             style: const TextStyle(fontSize: 18, color: Colors.black),
           ),
           const SizedBox(height: 40),
 
-          // --- Settings / Options List ---
+         
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30.0), // Horizontal padding
+            padding: const EdgeInsets.symmetric(horizontal: 30.0), 
             child: Column(
               children: [
-                // Update Email Option
+                
                 ListTile(
                   leading: Icon(
                     Icons.circle,
                     color: const Color.fromRGBO(70, 34, 85, 1),
-                  ), // Icon before text
+                  ), 
                   title: const Text(
                     "Update Email",
                     style: TextStyle(color: Colors.black),
@@ -115,13 +114,13 @@ class _ProfileState extends State<Profile> {
                     );
                   },
                 ),
-                const Divider(thickness: 1), // Divider line
-                // Update Personal Details Option
+                const Divider(thickness: 1), 
+                
                 ListTile(
                   leading: Icon(
                     Icons.circle,
                     color: const Color.fromRGBO(70, 34, 85, 1)
-                  ), // Icon before text
+                  ), 
                   title: const Text(
                     "Update Personal Details",
                     style: TextStyle(color: Colors.black),
@@ -133,20 +132,20 @@ class _ProfileState extends State<Profile> {
                     );
                   },
                 ),
-                const Divider(thickness: 1), // Divider line
-                // Logout Option
+                const Divider(thickness: 1), 
+                
                 ListTile(
                   leading: Icon(
                     Icons.logout,
                     color: const Color.fromRGBO(70, 34, 85, 1),
-                  ), // Logout icon
+                  ), 
                   title: const Text(
                     "Log Out",
                     style: TextStyle(color: Colors.black),
                   ),
-                  onTap: () => _logout(context), // Call logout function
+                  onTap: () => _logout(context), 
                 ),
-                const Divider(thickness: 1), // Divider line
+                const Divider(thickness: 1), 
               ],
             ),
           ),

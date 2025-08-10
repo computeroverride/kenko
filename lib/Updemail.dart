@@ -21,7 +21,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
     final confirmEmail = _confirmEmailController.text.trim();
     final password = _passwordController.text.trim();
 
-    // Validate inputs
+
     if (currentEmail.isEmpty ||
         newEmail.isEmpty ||
         confirmEmail.isEmpty ||
@@ -44,17 +44,17 @@ class _UpdateEmailState extends State<UpdateEmail> {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null && user.email == currentEmail) {
-        // Re-authenticate with the provided password
+
         AuthCredential credential = EmailAuthProvider.credential(
           email: currentEmail,
           password: password,
         );
         await user.reauthenticateWithCredential(credential);
 
-        // Update the email [THIS PART MAY BE BUGGY]
+ 
         await user.updateEmail(newEmail);
 
-        // Success message without mentioning verification
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Email updated successfully.")),
         );

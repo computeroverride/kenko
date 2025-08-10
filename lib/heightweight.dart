@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart'; //For date formatting
+import 'package:intl/intl.dart'; 
 
 class HeightWeight extends StatefulWidget {
   const HeightWeight({super.key});
@@ -13,9 +13,9 @@ class HeightWeight extends StatefulWidget {
 class _HeightWeightState extends State<HeightWeight> {
   final _heightController = TextEditingController();
   final _weightController = TextEditingController();
-  String? _gender; // Using String for radio selection
-  DateTime? _dob; // Using DateTime for calendar selection
-  int? _age; // To store calculated age
+  String? _gender; 
+  DateTime? _dob; 
+  int? _age; 
 
   Future<void> _saveAndContinue() async {
     final height = double.tryParse(_heightController.text.trim()) ?? 0.0;
@@ -33,18 +33,18 @@ class _HeightWeightState extends State<HeightWeight> {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        // Calculate age based on DOB and current date
+        
         final now = DateTime(
           2025,
           8,
           2,
           16,
           8,
-        ); // Current date: 2025-08-02 16:08 +08
+        ); 
         _age = now.year - _dob!.year;
         if (_dob!.month > now.month ||
             (_dob!.month == now.month && _dob!.day > now.day)) {
-          _age = _age! - 1; // Adjust age if birthday hasn't occurred this year
+          _age = _age! - 1; 
         }
 
         final heightInMeters = height / 100;
@@ -57,9 +57,9 @@ class _HeightWeightState extends State<HeightWeight> {
               'height': height,
               'weight': weight,
               'gender': _gender,
-              'dob': _dob!.toIso8601String(), // Store DOB as ISO string
-              'age': _age, // Store calculated age
-              'bmi': bmi, // Store calculated BMI
+              'dob': _dob!.toIso8601String(), 
+              'age': _age, 
+              'bmi': bmi, 
             });
 
         Navigator.pushReplacementNamed(context, '/home');

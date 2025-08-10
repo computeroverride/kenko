@@ -189,7 +189,7 @@ class _FreeMapScreenState extends State<FreeMapScreen> {
                         ),
                         MarkerLayer(
                           markers: [
-                            // User location marker
+                           
                             Marker(
                               point: userLocation!,
                               width: 40,
@@ -201,7 +201,7 @@ class _FreeMapScreenState extends State<FreeMapScreen> {
                                 color: Colors.blue,
                               ),
                             ),
-                            // All places in category
+                            
                             for (var entry in currentPlaces.entries)
                               Marker(
                                 point: entry.value,

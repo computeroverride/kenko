@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart'; //Firebase authentication package
+import 'package:firebase_auth/firebase_auth.dart'; 
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -9,20 +9,20 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  // Controllers to capture username and password text field inputs
+  
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  // Controls password visibility toggle
+
   bool _obscurePassword = true;
 
-  // Function to handle login logic using Firebase Authentication
+
   Future<void> _login() async {
     final email =
-        _usernameController.text.trim(); // Get email input and trim spaces
+        _usernameController.text.trim(); 
     final password =
-        _passwordController.text.trim(); // Get password input and trim spaces
+        _passwordController.text.trim(); 
 
-    // If either field is empty, show a snackbar and return early
+  
     if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please fill in all fields.")),
@@ -31,16 +31,16 @@ class _LoginState extends State<Login> {
     }
 
     try {
-      // Firebase sign-in with email and password
+
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      // Navigate to Home page if login is successful
+
       Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
-      // Show Firebase error message if login fails
+
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(e.message ?? "Login failed.")));
@@ -51,7 +51,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(99, 75, 102, 1),
-      // --- Body content ---
+      
       body: Column(
         children: [
           Center(
@@ -96,29 +96,29 @@ class _LoginState extends State<Login> {
                       ),
                       const Text("Log in to continue"),
                       const SizedBox(height: 20),
-                      // --- Username TextField ---
+                      
                       TextField(
                         controller:
-                            _usernameController, // Binds input to controller
+                            _usernameController, 
                         textAlign: TextAlign.left,
                         decoration: const InputDecoration(
-                          labelText: "Enter Email", // Placeholder text
+                          labelText: "Enter Email", 
                           hintStyle: TextStyle(color: Colors.grey),
                           border: UnderlineInputBorder(
                             borderSide: BorderSide(
                               color: Colors.grey,
-                            ), // Line under textfield
+                            ), 
                           ),
                         ),
                       ),
                       const SizedBox(height: 20),
-                      // --- Password TextField ---
+                      
                       TextField(
                         controller: _passwordController,
 
                         textAlign: TextAlign.left,
                         obscureText:
-                            _obscurePassword, // Controls password visibility
+                            _obscurePassword, 
                         decoration: InputDecoration(
                           labelText: "Password",
                           hintStyle: const TextStyle(color: Colors.grey),
@@ -129,12 +129,12 @@ class _LoginState extends State<Login> {
                             icon: Icon(
                               _obscurePassword
                                   ? Icons
-                                      .visibility_off // Eye with slash (hidden)
-                                  : Icons.visibility, // Eye open (visible)
+                                      .visibility_off 
+                                  : Icons.visibility, 
                               color: Colors.grey,
                             ),
                             onPressed: () {
-                              // Toggle password visibility state
+                              
                               setState(() {
                                 _obscurePassword = !_obscurePassword;
                               });
@@ -145,11 +145,11 @@ class _LoginState extends State<Login> {
 
                       const SizedBox(height: 40),
 
-                      // --- Login Button ---
+                     
                       Center(
                         child: SizedBox(
                           height: 50,
-                          width: double.infinity, // Full-width button
+                          width: double.infinity, 
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color.fromRGBO(
@@ -161,10 +161,10 @@ class _LoginState extends State<Login> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(
                                   50.0,
-                                ), // Rounded edges
+                                ), 
                               ),
                             ),
-                            onPressed: _login, // Calls the login handler
+                            onPressed: _login, 
                             child: const Text(
                               "LOG IN",
                               style: TextStyle(
@@ -178,15 +178,15 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      // --- Signup link ---
+                      
                       Center(
                         child: GestureDetector(
                           onTap: () {
-                            // Redirects to signup page
+                           
                             Navigator.pushReplacementNamed(context, '/signup');
                           },
                           child: const Text(
-                            "Not registered yet? Register", // Signup text link
+                            "Not registered yet? Register", 
                             style: TextStyle(color: Colors.grey),
                           ),
                         ),

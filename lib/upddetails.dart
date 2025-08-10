@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart'; // For date formatting
+import 'package:intl/intl.dart'; 
 
 class UpdateDetails extends StatefulWidget {
   const UpdateDetails({super.key});
@@ -20,7 +20,7 @@ class _UpdateDetailsState extends State<UpdateDetails> {
   @override
   void initState() {
     super.initState();
-    _fetchUserData(); // Fetch existing user data
+    _fetchUserData(); 
   }
 
   Future<void> _fetchUserData() async {
@@ -61,20 +61,20 @@ class _UpdateDetailsState extends State<UpdateDetails> {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        // Calculate age based on DOB and current date
+        
         final now =
-            DateTime.now(); // Updated to use current date and time (08:57 AM +08, August 03, 2025)
+            DateTime.now(); 
         _age = now.year - _dob!.year;
         if (_dob!.month > now.month ||
             (_dob!.month == now.month && _dob!.day > now.day)) {
-          _age = _age! - 1; // Adjust age if birthday hasn't occurred this year
+          _age = _age! - 1; 
         }
 
-        // Calculate BMI: weight(kg) / (height(m))^2
+        
         final heightInMeters = height / 100;
         final bmi = weight / (heightInMeters * heightInMeters);
 
-        // Update main user document
+      
         await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
@@ -82,19 +82,19 @@ class _UpdateDetailsState extends State<UpdateDetails> {
               'height': height,
               'weight': weight,
               'gender': _gender,
-              'dob': _dob!.toIso8601String(), // Store DOB as ISO string
-              'age': _age, // Store calculated age
-              'bmi': bmi, // Store calculated BMI
+              'dob': _dob!.toIso8601String(), 
+              'age': _age, 
+              'bmi': bmi, 
             });
 
-        // Log the new weight to weight_logs
+ 
         await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
             .collection('weight_logs')
             .add({'weight': weight, 'timestamp': FieldValue.serverTimestamp()});
 
-        Navigator.pop(context); // Return to Profile page
+        Navigator.pop(context); 
       }
     } catch (e) {
       ScaffoldMessenger.of(
@@ -103,7 +103,7 @@ class _UpdateDetailsState extends State<UpdateDetails> {
     }
   }
 
-  // Function to show date picker
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,

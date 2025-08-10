@@ -6,16 +6,16 @@ class LogAdd extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity, // Make container full width
-      padding: const EdgeInsets.all(16), // Uniform padding for spacing
+      width: double.infinity, 
+      padding: const EdgeInsets.all(16), 
 
       child: Column(
-        mainAxisSize: MainAxisSize.min, // Height adjusts based on content
+        mainAxisSize: MainAxisSize.min, 
         crossAxisAlignment:
-            CrossAxisAlignment.stretch, // Children stretch horizontally
+            CrossAxisAlignment.stretch, 
 
         children: [
-          // --- Food and Water Log Option ---
+          
           ListTile(
             leading: const Icon(
               Icons.rice_bowl,
@@ -30,16 +30,16 @@ class LogAdd extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Navigator.pop(context); // Close the bottom sheet
+              Navigator.pop(context); 
               Navigator.pushReplacementNamed(
                 context,
                 '/food&water',
-              ); // Navigate to food & water log page
+              ); 
             },
           ),
           const Divider(thickness: 1),
 
-          // --- Activity Log Option ---
+        
           ListTile(
             leading: const Icon(
               Icons.local_activity,
@@ -54,11 +54,11 @@ class LogAdd extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Navigator.pop(context); // Close the bottom sheet
+              Navigator.pop(context); 
               Navigator.pushReplacementNamed(
                 context,
                 '/activity',
-              ); // Navigate to activity log page
+              ); 
             },
           ),
           const Divider(thickness: 1),

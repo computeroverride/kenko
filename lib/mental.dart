@@ -18,7 +18,7 @@ class MentalPage extends StatefulWidget {
 }
 
 class _MentalPageState extends State<MentalPage> {
-  final int _selectedIndex = 4; // This page is at index 4 (Mental)
+  final int _selectedIndex = 4; 
 
   final List<Quote> _quotes = [
     Quote(
@@ -132,7 +132,7 @@ class _MentalPageState extends State<MentalPage> {
         Navigator.pushReplacementNamed(context, '/map');
         break;
       case 4:
-        // already on Mental
+        
         break;
     }
   }
@@ -186,7 +186,7 @@ class _MentalPageState extends State<MentalPage> {
               Navigator.pushReplacementNamed(
                 context,
                 '/profile',
-              ); // Go to profile page
+              ); 
             },
           ),
         ],

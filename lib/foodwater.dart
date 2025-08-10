@@ -13,7 +13,7 @@ class FoodWaterLog extends StatefulWidget {
 class _FoodWaterLogState extends State<FoodWaterLog> {
   int _selectedIndex = 0;
 
-  // Controllers to capture user input
+  
   final _foodNameController = TextEditingController();
   final _caloriesController = TextEditingController();
   final _glassesController = TextEditingController();
@@ -48,12 +48,12 @@ class _FoodWaterLogState extends State<FoodWaterLog> {
     _foodNameController.clear();
     _caloriesController.clear();
     _glassesController.clear();
-    Navigator.pushReplacementNamed(context, '/home'); // Return to Home
+    Navigator.pushReplacementNamed(context, '/home'); 
   }
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index; // Track selected bottom nav index
+      _selectedIndex = index; 
     });
   }
 
@@ -67,7 +67,7 @@ class _FoodWaterLogState extends State<FoodWaterLog> {
         title: const Text(
           "ADD TO FOOD AND WATER LOG",
           style: TextStyle(
-            fontSize: 24,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
             color: Colors.white,
@@ -80,7 +80,7 @@ class _FoodWaterLogState extends State<FoodWaterLog> {
               Navigator.pushReplacementNamed(
                 context,
                 '/profile',
-              ); // Go to profile page
+              ); 
             },
           ),
         ],
