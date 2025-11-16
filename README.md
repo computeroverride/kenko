@@ -1,4 +1,4 @@
-# kenko
+# KENKO
 
 ## Getting Started
 
